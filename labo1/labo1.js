@@ -1,11 +1,18 @@
-var vertexBuffer = null;
-var indexBuffer = null;
-var colorBuffer = null;
-var indices = [];
-var vertices = [];
-var colors = [];
-var mvMatrix = mat4.create();
-var pMatrix = mat4.create();
+let vertexBuffer = null;
+let indexBuffer = null;
+let colorBuffer = null;
+let indices = [];
+let vertices = [];
+let colors = [];
+let mvMatrix = mat4.create();
+let pMatrix = mat4.create();
+
+function initWebGL() {
+    glContext = getGLContext('webgl-canvas');
+    initProgram();
+    initBuffers();
+    renderLoop();
+}
 
 function initShaderParameters(prg) {
     prg.vertexPositionAttribute = glContext.getAttribLocation(prg, "aVertexPosition");
@@ -44,11 +51,4 @@ function drawScene() {
     glContext.vertexAttribPointer(prg.colorAttribute, 4, glContext.FLOAT, false, 0, 0);
     glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
     glContext.drawElements(glContext.TRIANGLE_STRIP, indices.length, glContext.UNSIGNED_SHORT, 0);
-}
-
-function initWebGL() {
-    glContext = getGLContext('webgl-canvas');
-    initProgram();
-    initBuffers();
-    renderLoop();
 }
