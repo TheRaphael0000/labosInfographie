@@ -3,8 +3,12 @@
 
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="css/stylesheet.css">
-    <script src="../lib/gl-matrix-min.js"></script>
+    <link rel="stylesheet" href="../lib/stylesheet.css">
+    <!--
+        Using a cdn for the matrix lib instead of this old version
+        <script src="../lib/gl-matrix-min.js"></script>
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.7.1/gl-matrix-min.js"></script>
     <script src="../lib/webglTools.js"></script>
     <script src="labo1.js"></script>
     <script id="shader-vs" type="x-shader/x-vertex">
@@ -30,6 +34,16 @@
 </head>
 
 <body onload="initWebGL()">
+    <h1>Laboratoire n°1 - Animation papillion</h1>
+    <h2>Groupe n° X</h2>
+    <p>
+        Elèves :
+    </p>
+    <ul>
+        <li>Jmaa Mohamed</li>
+        <li>Arzul Paul</li>
+        <li>Margueron Raphael</li>
+    </ul>
     <canvas id="webgl-canvas" width="500" height="500">
       HTML5 is not supported
     </canvas>
