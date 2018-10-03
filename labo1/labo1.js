@@ -43,7 +43,7 @@ function initParts() {
 }
 
 function initWing1() {
-    wing1Vertex.push(0.2, 0, 0);
+    wing1Vertex.push(0.1, 0, 0);
     wing1Vertex.push(1, 1, 0);
     wing1Vertex.push(1, -1, 0);
     wing1Colors.push(0, 0, 1, 1);
@@ -53,7 +53,7 @@ function initWing1() {
 }
 
 function initWing2() {
-    wing2Vertex.push(-0.2, 0, 0);
+    wing2Vertex.push(-0.1, 0, 0);
     wing2Vertex.push(-1, 1, 0);
     wing2Vertex.push(-1, -1, 0);
     wing2Colors.push(0, 0, 1, 1);
@@ -71,15 +71,15 @@ function initBody() {
     bodyColors.push(0, 0, 1, 1);
     bodyColors.push(0, 0, 1, 1);
     bodyColors.push(0, 0, 1, 1);
-    bodyIndices.push(0, 1, 2);
+    bodyIndices.push(0, 1, 2, 1, 3);
 }
 
 function drawScene() {
     glContext.clearColor(0.9, 0.9, 0.9, 1);
     glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
+    drawPart(bodyVertex, bodyColors, bodyIndices);
     drawPart(wing1Vertex, wing1Colors, wing1Indices);
     drawPart(wing2Vertex, wing2Colors, wing2Indices);
-    drawPart(bodyVertex, bodyColors, bodyIndices);
 }
 
 function drawPart(vertices, colors, indices) {
