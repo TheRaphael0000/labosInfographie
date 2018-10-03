@@ -75,7 +75,7 @@ function initBody() {
 }
 
 function drawScene() {
-    glContext.clearColor(0.9, 0.9, 0.9, 1);
+    glContext.clearColor(0, 0, 0, 0.1);
     glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
     drawPart(bodyVertex, bodyColors, bodyIndices);
     drawPart(wing1Vertex, wing1Colors, wing1Indices);
@@ -86,6 +86,7 @@ function drawPart(vertices, colors, indices) {
     vertexBuffer = getVertexBufferWithVertices(vertices);
     colorBuffer = getVertexBufferWithVertices(colors);
     indexBuffer = getIndexBufferWithIndices(indices);
+
     //glContext.enable(glContext.DEPTH_TEST);
     glContext.viewport(0, 0, c_width, c_height);
     mat4.identity(pMatrix);
