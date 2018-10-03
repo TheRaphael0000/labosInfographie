@@ -1,103 +1,75 @@
-let vertexBuffer = null;
-let indexBuffer = null;
-let colorBuffer = null;
+//WebGL Varaibles
+let gl; //webgl context
+let prg; //webgl program
 
-let indices = [];
-let vertices = [];
-let colors = [];
+let cnv; //canvas
+
+//Refresh
+let interval;
+const FRAMERATE = 60.0 / 1000.0; // images/milliseconds
+const PERIOD = 1 / FRAMERATE;
+
+//Camera
 let mvMatrix = mat4.create();
 let pMatrix = mat4.create();
 
-let wing1Vertex = [];
-let wing2Vertex = [];
-let bodyVertex = [];
+let butterfly;
 
-let wing1Colors = [];
-let wing2Colors = [];
-let bodyColors = [];
+function labo1() {
+    initWebGL();
+	gl.clearColor(0, 0, 0, 0.1);
 
-let wing1Indices = [];
-let wing2Indices = [];
-let bodyIndices = [];
+	butterfly = new Butterfly(gl);
 
-function initWebGL() {
-    glContext = getGLContext('webgl-canvas');
-    initProgram();
-    initParts();
-    renderLoop();
+	//Start the draw loop
+	interval = setInterval(function() {
+		draw();
+	}, PERIOD);
 }
 
-function initShaderParameters(prg) {
-    prg.vertexPositionAttribute = glContext.getAttribLocation(prg, "aVertexPosition");
-    glContext.enableVertexAttribArray(prg.vertexPositionAttribute);
-    prg.colorAttribute = glContext.getAttribLocation(prg, "aColor");
-    glContext.enableVertexAttribArray(prg.colorAttribute);
-    prg.pMatrixUniform = glContext.getUniformLocation(prg, 'uPMatrix');
-    prg.mvMatrixUniform = glContext.getUniformLocation(prg, 'uMVMatrix');
+function initWebGL()
+{
+    cnv = document.getElementById("cnv-labo1");
+    gl = cnv.getContext("webgl");
+    prg = gl.createProgram();
+
+    addShader(gl.VERTEX_SHADER, "shader-vs");
+    addShader(gl.FRAGMENT_SHADER, "shader-fs");
+
+    gl.linkProgram(prg);
+    gl.getProgramParameter(prg, gl.LINK_STATUS)
+    gl.useProgram(prg);
+    gl.viewport(0, 0, cnv.width, cnv.height);
+
+    prg.vertexPositionAttribute = gl.getAttribLocation(prg, "aVertexPosition");
+    gl.enableVertexAttribArray(prg.vertexPositionAttribute);
+    prg.colorAttribute = gl.getAttribLocation(prg, "aColor");
+    gl.enableVertexAttribArray(prg.colorAttribute);
+    prg.pMatrixUniform = gl.getUniformLocation(prg, 'uPMatrix');
+    prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
 }
 
-function initParts() {
-    initWing1();
-    initWing2();
-    initBody();
+function addShader(shaderType, id) {
+	let shader = gl.createShader(shaderType);
+	let str = document.getElementById(id).textContent;
+	gl.shaderSource(shader, str);
+	gl.compileShader(shader);
+	gl.getProgramParameter(prg, gl.LINK_STATUS)
+	gl.attachShader(prg, shader);
 }
 
-function initWing1() {
-    wing1Vertex.push(0.1, 0, 0);
-    wing1Vertex.push(1, 1, 0);
-    wing1Vertex.push(1, -1, 0);
-    wing1Colors.push(0, 0, 1, 1);
-    wing1Colors.push(1, 0, 0, 1);
-    wing1Colors.push(1, 0, 0, 1);
-    wing1Indices.push(0, 1, 2);
+function getBufferFromArrayElement(gl, gltype, jstype, array) {
+	let buff = gl.createBuffer();
+	gl.bindBuffer(gltype, buff);
+	gl.bufferData(gltype, new jstype(array), gl.STATIC_DRAW);
+	return buff;
 }
 
-function initWing2() {
-    wing2Vertex.push(-0.1, 0, 0);
-    wing2Vertex.push(-1, 1, 0);
-    wing2Vertex.push(-1, -1, 0);
-    wing2Colors.push(0, 0, 1, 1);
-    wing2Colors.push(1, 0, 0, 1);
-    wing2Colors.push(1, 0, 0, 1);
-    wing2Indices.push(0, 1, 2);
-}
+function draw() {
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-function initBody() {
-    bodyVertex.push(-0.2, -1, 0);
-    bodyVertex.push(0.2, -1, 0);
-    bodyVertex.push(-0.2, 1, 0);
-    bodyVertex.push(0.2, 1, 0);
-    bodyColors.push(0, 0, 1, 1);
-    bodyColors.push(0, 0, 1, 1);
-    bodyColors.push(0, 0, 1, 1);
-    bodyColors.push(0, 0, 1, 1);
-    bodyIndices.push(0, 1, 2, 1, 3);
-}
+	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
+	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
 
-function drawScene() {
-    glContext.clearColor(0, 0, 0, 0.1);
-    glContext.clear(glContext.COLOR_BUFFER_BIT | glContext.DEPTH_BUFFER_BIT);
-    drawPart(bodyVertex, bodyColors, bodyIndices);
-    drawPart(wing1Vertex, wing1Colors, wing1Indices);
-    drawPart(wing2Vertex, wing2Colors, wing2Indices);
-}
-
-function drawPart(vertices, colors, indices) {
-    vertexBuffer = getVertexBufferWithVertices(vertices);
-    colorBuffer = getVertexBufferWithVertices(colors);
-    indexBuffer = getIndexBufferWithIndices(indices);
-
-    //glContext.enable(glContext.DEPTH_TEST);
-    glContext.viewport(0, 0, c_width, c_height);
-    mat4.identity(pMatrix);
-    mat4.identity(mvMatrix);
-    glContext.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
-    glContext.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
-    glContext.bindBuffer(glContext.ARRAY_BUFFER, vertexBuffer);
-    glContext.vertexAttribPointer(prg.vertexPositionAttribute, 3, glContext.FLOAT, false, 0, 0);
-    glContext.bindBuffer(glContext.ARRAY_BUFFER, colorBuffer);
-    glContext.vertexAttribPointer(prg.colorAttribute, 4, glContext.FLOAT, false, 0, 0);
-    glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glContext.drawElements(glContext.TRIANGLE_STRIP, indices.length, glContext.UNSIGNED_SHORT, 0);
-
+	butterfly.draw();
 }
