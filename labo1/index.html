@@ -22,8 +22,8 @@
             gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         }
     </script>
-    <script id="shader-fs" type="x-shader/x-fragment">
-        #ifdef GL_ES
+	<script id="shader-fs" type="x-shader/x-fragment">
+		#ifdef GL_ES
             precision highp float;
         #endif
         varying vec4 vColor;
@@ -33,6 +33,9 @@
             gl_FragColor = vColor;
         }
     </script>
+	<script src="ButterflyBody.js"></script>
+	<script src="ButterflyWingL.js"></script>
+	<script src="ButterflyWingR.js"></script>
 	<script src="Butterfly.js"></script>
 	<script src="labo1.js"></script>
 </head>
