@@ -17,7 +17,9 @@
         uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
         varying vec4 vColor;
-        void main(void) {
+
+        void main(void)
+        {
           vColor = aColor;
           gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         }
@@ -26,8 +28,10 @@
         #ifdef GL_ES
           precision highp float;
         #endif
-          varying vec4 vColor;
-        void main(void) {
+        varying vec4 vColor;
+
+        void main(void)
+        {
           gl_FragColor = vColor;
         }
     </script>
@@ -44,8 +48,8 @@
         <li>Arzul Paul</li>
         <li>Margueron Raphael</li>
     </ul>
-    <canvas id="webgl-canvas" width="500" height="500">
-      HTML5 is not supported
+    <canvas id="webgl-canvas" width="600" height="600">
+        HTML5 is not supported
     </canvas>
 </body>
 
