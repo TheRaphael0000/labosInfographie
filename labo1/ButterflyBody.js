@@ -3,7 +3,7 @@ class ButterflyBody {
 		let width = 0.3;
 		let height = 1.7;
 
-		const nb = 500; //sampling
+		const nb = 40; //sampling
 		const step = 2 * Math.PI / nb;
 		this.vertices = [];
 		this.colors = [];
@@ -14,9 +14,9 @@ class ButterflyBody {
 		this.indices.push(0);
 
 		for (let theta = 0; theta < 2 * Math.PI; theta += step) {
-			//Polar wing function
+			//Polar circle function
 			let r = Math.sin(theta);
-			//Polar to cartesian
+			//Polar to cartesian adding coef on x and y to reshape the circle like an oval
 			let x = width * r * Math.cos(theta);
 			let y = height * r * Math.sin(theta) - height / 2;
 
