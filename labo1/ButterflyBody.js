@@ -1,19 +1,30 @@
 class ButterflyBody {
 	constructor() {
+		let width = 0.3;
+		let height = 1.7;
+
+		const nb = 500; //sampling
+		const step = 2 * Math.PI / nb;
 		this.vertices = [];
-		this.vertices.push(-0.2, -1, 0);
-		this.vertices.push(0.2, -1, 0);
-		this.vertices.push(-0.2, 1, 0);
-		this.vertices.push(0.2, 1, 0);
-
 		this.colors = [];
-		this.colors.push(0, 0, 1, 1);
-		this.colors.push(0, 0, 1, 1);
-		this.colors.push(0, 0, 1, 1);
-		this.colors.push(0, 0, 1, 1);
-
 		this.indices = [];
-		this.indices.push(0, 1, 2, 1, 3);
+
+		this.vertices.push(0, 0, 0);
+		this.colors.push(230/255.0, 0, 98/255.0, 1);
+		this.indices.push(0);
+
+		for (let theta = 0; theta < 2 * Math.PI; theta += step) {
+			//Polar wing function
+			let r = Math.sin(theta);
+			//Polar to cartesian
+			let x = width * r * Math.cos(theta);
+			let y = height * r * Math.sin(theta) - height / 2;
+
+			this.vertices.push(x, y, 0); // x = y symmetry
+			this.colors.push(0, 0, 1, 1);
+			this.indices.push(this.indices.length-1);
+			this.indices.push(0);
+		}
 
 		this.drawMode = gl.TRIANGLE_STRIP;
 	}

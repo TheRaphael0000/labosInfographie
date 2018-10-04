@@ -27,6 +27,6 @@ class Butterfly {
 		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 		gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-		gl.drawElements(part.drawMode, part.indices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(part.drawMode, part.vertices.length/3+1, gl.UNSIGNED_SHORT, 0);
 	}
 }
