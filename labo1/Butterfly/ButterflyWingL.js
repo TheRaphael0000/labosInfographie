@@ -10,6 +10,6 @@ class ButterflyWingL {
 	}
 
 	update(frame) {
-
+        
 	}
 }

@@ -19,7 +19,7 @@ let butterfly;
 
 function labo1() {
 	initWebGL();
-	gl.clearColor(0, 0, 0, 0.1);
+	gl.clearColor(0, 0, 0, 0.02);
 
 	butterfly = new Butterfly(gl);
 
