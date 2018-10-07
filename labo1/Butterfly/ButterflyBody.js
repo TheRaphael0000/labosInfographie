@@ -1,5 +1,6 @@
 class ButterflyBody {
 	constructor() {
+        this.pos = mat4.create();
 		let width = 0.3;
 		let height = 1.7;
 

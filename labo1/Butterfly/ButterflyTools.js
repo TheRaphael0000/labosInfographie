@@ -25,4 +25,14 @@ class ButterflyTools {
 		}
 		return [vertices, colors, indices];
 	}
+
+    static getWingRotationFromFrame(frame, inverse)
+    {
+        let rotate = mat4.create();
+        let angle = Math.PI / 3.5;
+        let speed = 0.1;
+        let value = Math.sin(frame * speed);
+        let angleRad = MathPlus.map(value, -1, 1, (inverse? -1: 1) * angle, (inverse? 1: -1) * angle);
+        return mat4.fromRotation(rotate, angleRad, [0,1,0]);
+    }
 }
