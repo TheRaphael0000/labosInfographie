@@ -21,11 +21,11 @@ function labo1() {
     initWebGL();
     gl.clearColor(0, 0, 0, 0.02);
 
-	butterflyMain = new Butterfly(gl,80);
-    butterfly1 = new Butterfly(gl,20);
-    butterfly2 = new Butterfly(gl,20);
-	
-	butterflyes = [butterflyMain, butterfly1, butterfly2];
+    butterflyMain = new Butterfly(gl,80);
+    butterflyes = [butterflyMain]
+
+    for (let i = 1; i < 4; i++)
+		    butterflyes[i] = new Butterfly(gl,20,butterflyes[i-1].scale/1.2 );
 
     cnv.onmousemove = function(evt) {
         let cnv = evt.srcElement;
@@ -103,6 +103,6 @@ function draw() {
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	
 	
-	for (let i = 0; i < butterflyes.length; i++)
+	for (let i = butterflyes.length-1; i >=0; i--)
 		butterflyes[i].draw(frame);
 }

@@ -1,6 +1,6 @@
 class Butterfly {
-    constructor(gl, sampleSize) {
-        this.scale = 0.2;
+    constructor(gl, sampleSize, scale = 0.2) {
+        this.scale = scale;
         this.gl = gl;
         this.x = 0;
         this.y = 0;
