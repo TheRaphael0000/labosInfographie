@@ -1,7 +1,7 @@
 class ButterflyTools {
     static getBasicWing(color1, color2, coefx, coefy, swap, scale, sampleSize=250) {
-        const nb = sampleSize; //sampling
-        const step = 2 * Math.PI / nb;
+        let nb = sampleSize; //sampling
+        let step = 2 * Math.PI / nb;
         let vertices = [];
         let colors = [];
         let indices = [];
@@ -25,13 +25,12 @@ class ButterflyTools {
         }
 
         vec3.forEach(vertices, 0, 0, 0, vec3.scale, scale);
+
         return [vertices, colors, indices];
     }
 
-    static getWingRotationFromFrame(frame, inverse) {
+    static getWingRotationFromFrame(frame, angle, speed, inverse) {
         let rotate = mat4.create();
-        let angle = Math.PI / 3.5;
-        let speed = 0.1;
         let value = Math.sin(frame * speed);
         let angleRad = MathPlus.map(value, -1, 1, (inverse ? -1 : 1) * angle, (inverse ? 1 : -1) * angle);
         return mat4.fromRotation(rotate, angleRad, [0, 1, 0]);

@@ -1,7 +1,8 @@
 class ButterflyWingR {
-	constructor(color1, color2, scale, sampleSize) {
+	constructor(parent) {
+		this.parent = parent;
         this.pos = mat4.create();
-		let arr = ButterflyTools.getBasicWing(color1, color2, 1, 1, true, scale, sampleSize);
+		let arr = ButterflyTools.getBasicWing(this.parent.color1, this.parent.color2, 1, 1, true, this.parent.scale, this.parent.sampleSize);
 
         this.vertices = arr[0];
         this.colors = arr[1];
@@ -11,7 +12,7 @@ class ButterflyWingR {
 	}
 
 	update(frame) {
-        let rotate = ButterflyTools.getWingRotationFromFrame(frame, false);
+        let rotate = ButterflyTools.getWingRotationFromFrame(frame, this.parent.angle, this.parent.speed,false);
         mat4.multiply(this.pos, mat4.create(), rotate);
 	}
 }

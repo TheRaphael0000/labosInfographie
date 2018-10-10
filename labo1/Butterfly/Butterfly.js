@@ -1,28 +1,35 @@
 class Butterfly {
     constructor(gl, sampleSize, scale = 0.2) {
-        this.scale = scale;
         this.gl = gl;
-        this.x = 0;
-        this.y = 0;
-        this.dstX = 0;
-        this.dstY = 0;
-        this.pos = mat4.create();
-        this.translate = mat4.create();
-        this.rotate = mat4.create();
+
+        this.sampleSize = sampleSize;
+        this.scale = scale; //size of the butterfly
+        this.lerp = 0.15; //
+        this.angle = Math.PI / 3.5; //wings angle
+        this.speed = 0.1; //wings speed
 
         this.color1 = MathPlus.randomColor();
         this.color2 = MathPlus.randomColor();
 
-        this.body = new ButterflyBody(this.color1, this.color2, this.scale);
-        this.wingL = new ButterflyWingL(this.color1, this.color2, this.scale, sampleSize);
-        this.wingR = new ButterflyWingR(this.color1, this.color2, this.scale, sampleSize);
+        this.x = 0;
+        this.y = 0;
+        this.dstX = 0;
+        this.dstY = 0;
+
+        this.pos = mat4.create();
+        this.translate = mat4.create();
+        this.rotate = mat4.create();
+
+        this.body = new ButterflyBody(this);
+        this.wingL = new ButterflyWingL(this);
+        this.wingR = new ButterflyWingR(this);
         this.parts = [this.body, this.wingL, this.wingR];
     }
 
     update(frame) {
         //Lerp to destination
-        this.x = MathPlus.lerp(this.x, this.dstX, 0.15);
-        this.y = MathPlus.lerp(this.y, this.dstY, 0.15);
+        this.x = MathPlus.lerp(this.x, this.dstX, this.lerp);
+        this.y = MathPlus.lerp(this.y, this.dstY, this.lerp);
         mat4.fromTranslation(this.translate, [this.x, this.y, 0]);
 
         //Permanant rotation
