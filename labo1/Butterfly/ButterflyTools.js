@@ -18,8 +18,8 @@ class ButterflyTools {
             else
                 vertices.push(coefy * y, coefx * x, 0); // x = y symmetry
 
-            colors.concat(color1);
-            colors.concat(color2);
+            colors = colors.concat(color1);
+            colors = colors.concat(color2);
             indices.push(0);
             indices.push(indices.length);
         }

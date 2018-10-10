@@ -11,7 +11,7 @@ class ButterflyBody {
 		this.indices = [];
 
 		this.vertices.push(0, 0, 0);
-		this.colors.concat(color1); //concat merge the two array (push the values)
+		this.colors = this.colors.concat(color1); //concat merge the two array (push the values)
 		this.indices.push(0);
 
 		for (let theta = 0; theta < 2 * Math.PI; theta += step) {
@@ -22,7 +22,7 @@ class ButterflyBody {
 			let y = height * r * Math.sin(theta) - height / 2;
 
 			this.vertices.push(x, y, 0); // x = y symmetry
-			this.colors.concat(color2);
+			this.colors = this.colors.concat(color2);
 			this.indices.push(this.indices.length-1);
 			this.indices.push(0);
 		}

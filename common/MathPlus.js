@@ -10,10 +10,6 @@ class MathPlus {
     }
 
     static randomColor() {
-        return [this.randomColorComposante(), this.randomColorComposante(), this.randomColorComposante(), 1];
-    }
-
-    static randomColorComposante() {
-        return Math.floor(Math.random() * 255);
+        return [Math.random(), Math.random(), Math.random(), 1];
     }
 }
