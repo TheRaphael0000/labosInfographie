@@ -3,6 +3,8 @@ class Butterfly {
 		this.scale = 0.2;
 		this.gl = gl;
         this.pos = mat4.create();
+        this.translate = mat4.create();
+		this.rotate = mat4.create();
 		this.body = new ButterflyBody(this.scale);
 		this.wingL = new ButterflyWingL(this.scale);
 		this.wingR = new ButterflyWingR(this.scale);
@@ -10,15 +12,22 @@ class Butterfly {
 	}
 
 	update(frame) {
-        //Rotate it to the
-        //mat4.multiply(this.pos, mat4.create(), mat4.fromRotation(mat4.create(), Math.PI / 2, [0, 0, 1]));
         //Rotate with the time
-        let rotation = mat4.create();
-        mat4.fromRotation(rotation, frame*0.01, [0.3, 0.5, 0.1]);
-        mat4.multiply(this.pos, mat4.create(), rotation);
+
+        this.rotation = mat4.create();
+        mat4.fromRotation(this.rotation, frame*0.01, [0.3, 0.5, 0.1]);
+
+		this.applyTransform();
 
 		for (let i = 0; i < this.parts.length; i++)
 			this.parts[i].update(frame);
+	}
+
+	applyTransform()
+	{
+		this.pos = mat4.create();
+		mat4.multiply(this.pos, this.pos, this.translate);
+        mat4.multiply(this.pos, this.pos, this.rotation);
 	}
 
 	draw() {
@@ -41,5 +50,10 @@ class Butterfly {
 		gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 		gl.drawElements(part.drawMode, part.vertices.length/3+1, gl.UNSIGNED_SHORT, 0);
+	}
+
+	moveTo(x, y)
+	{
+		mat4.fromTranslation(this.translate, [x, y, 0]);
 	}
 }
