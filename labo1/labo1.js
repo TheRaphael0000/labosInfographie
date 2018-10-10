@@ -26,7 +26,7 @@ function labo1() {
     cnv.onmousemove = function(evt) {
         let cnv = evt.srcElement;
         let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
-        butterfly.moveTo(mousepos.x, mousepos.y);
+        butterfly.setDstPos(mousepos.x, mousepos.y);
     };
 
     //Start the draw loop
