@@ -93,7 +93,7 @@ function loop() {
 
 function update() {
 	for (let i = 0; i < butterflyes.length; i++)
-		butterflyes[i].update(frame);
+		butterflyes[i].update(frame+((butterflyes.length-1-i)*10)); // dephase the next butterfly so that they will follow the main butterfly rythme
 	
 }
 
