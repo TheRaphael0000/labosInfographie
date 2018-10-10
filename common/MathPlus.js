@@ -8,4 +8,12 @@ class MathPlus {
     static lerp(v0, v1, t) {
         return (1 - t) * v0 + t * v1;
     }
+
+    static randomColor() {
+        return [this.randomColorComposante(), this.randomColorComposante(), this.randomColorComposante(), 1];
+    }
+
+    static randomColorComposante() {
+        return Math.floor(Math.random() * 255);
+    }
 }

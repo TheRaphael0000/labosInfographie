@@ -4,28 +4,32 @@ class Butterfly {
         this.gl = gl;
         this.x = 0;
         this.y = 0;
-		this.dstX = 0;
-		this.dstY = 0;
+        this.dstX = 0;
+        this.dstY = 0;
         this.pos = mat4.create();
         this.translate = mat4.create();
         this.rotate = mat4.create();
-        this.body = new ButterflyBody(this.scale);
-        this.wingL = new ButterflyWingL(this.scale, sampleSize);
-        this.wingR = new ButterflyWingR(this.scale, sampleSize);
+
+        this.color1 = MathPlus.randomColor();
+        this.color2 = MathPlus.randomColor();
+
+        this.body = new ButterflyBody(this.color1, this.color2, this.scale);
+        this.wingL = new ButterflyWingL(this.color1, this.color2, this.scale, sampleSize);
+        this.wingR = new ButterflyWingR(this.color1, this.color2, this.scale, sampleSize);
         this.parts = [this.body, this.wingL, this.wingR];
     }
 
     update(frame) {
-		//Lerp to destination
+        //Lerp to destination
         this.x = MathPlus.lerp(this.x, this.dstX, 0.15);
         this.y = MathPlus.lerp(this.y, this.dstY, 0.15);
         mat4.fromTranslation(this.translate, [this.x, this.y, 0]);
 
-		//Permanant rotation
+        //Permanant rotation
         this.rotation = mat4.create();
         mat4.fromRotation(this.rotation, frame * 0.01, [0.3, 0.5, 0.1]);
 
-		//Apply transformations
+        //Apply transformations
         this.applyTransform();
 
         for (let i = 0; i < this.parts.length; i++)

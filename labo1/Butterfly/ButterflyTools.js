@@ -1,5 +1,5 @@
 class ButterflyTools {
-    static getBasicWing(coefx, coefy, swap, scale, sampleSize=250) {
+    static getBasicWing(color1, color2, coefx, coefy, swap, scale, sampleSize=250) {
         const nb = sampleSize; //sampling
         const step = 2 * Math.PI / nb;
         let vertices = [];
@@ -18,8 +18,8 @@ class ButterflyTools {
             else
                 vertices.push(coefy * y, coefx * x, 0); // x = y symmetry
 
-            colors.push(1, 0, 0, 1);
-            colors.push(0, 0, 1, 1);
+            colors.concat(color1);
+            colors.concat(color2);
             indices.push(0);
             indices.push(indices.length);
         }
