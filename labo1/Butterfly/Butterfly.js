@@ -34,7 +34,7 @@ class Butterfly {
 
         //Permanant rotation
         this.rotation = mat4.create();
-        mat4.fromRotation(this.rotation, frame * 0.01, [0.3, 0.5, 0.1]);
+        mat4.fromRotation(this.rotation, frame * 0.04, [0.3, 0.5, 0.1]);
 
         //Apply transformations
         this.applyTransform();
