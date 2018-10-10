@@ -21,15 +21,18 @@ function labo1() {
     initWebGL();
     gl.clearColor(0, 0, 0, 0.02);
 
-	butterflyMain = new Butterfly(gl,250);
-	butterfly1 = new Butterfly(gl,20);
+	butterflyMain = new Butterfly(gl,80);
+    butterfly1 = new Butterfly(gl,20);
+    butterfly2 = new Butterfly(gl,20);
 	
-	butterflyes = [butterflyMain, butterfly1];
+	butterflyes = [butterflyMain, butterfly1, butterfly2];
 
     cnv.onmousemove = function(evt) {
         let cnv = evt.srcElement;
 		let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
-		butterflyes[0].setDstPos(mousepos.x, mousepos.y);
+        butterflyes[0].setDstPos(mousepos.x, mousepos.y);
+        for (let i = 1; i < butterflyes.length; i++)
+		    butterflyes[i].setDstPos(butterflyes[i-1].x, butterflyes[i-1].y);
     };
 
     //Start the draw loop
