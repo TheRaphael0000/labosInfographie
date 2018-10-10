@@ -1,5 +1,5 @@
 class ButterflyBody {
-	constructor() {
+	constructor(scale) {
         this.pos = mat4.create();
 		let width = 0.3;
 		let height = 1.7;
@@ -26,6 +26,8 @@ class ButterflyBody {
 			this.indices.push(this.indices.length-1);
 			this.indices.push(0);
 		}
+
+		vec3.forEach(this.vertices, 0, 0, 0, vec3.scale, scale);
 
 		this.drawMode = gl.TRIANGLE_STRIP;
 	}

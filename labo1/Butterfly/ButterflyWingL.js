@@ -1,7 +1,7 @@
 class ButterflyWingL {
-	constructor() {
+	constructor(scale) {
         this.pos = mat4.create();
-		let arr = ButterflyTools.getBasicWing(1, -1, true);
+		let arr = ButterflyTools.getBasicWing(1, -1, true, scale);
 
         this.vertices = arr[0];
         this.colors = arr[1];

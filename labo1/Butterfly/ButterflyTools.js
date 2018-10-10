@@ -1,5 +1,5 @@
 class ButterflyTools {
-	static getBasicWing(coefx, coefy, swap) {
+	static getBasicWing(coefx, coefy, swap, scale) {
 		const nb = 500; //sampling
 		const step = 2 * Math.PI / nb;
 		let vertices = [];
@@ -23,6 +23,8 @@ class ButterflyTools {
 			indices.push(0);
 			indices.push(indices.length);
 		}
+
+		vec3.forEach(vertices, 0, 0, 0, vec3.scale, scale);
 		return [vertices, colors, indices];
 	}
 
