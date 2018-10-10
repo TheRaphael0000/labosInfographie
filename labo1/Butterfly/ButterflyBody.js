@@ -1,5 +1,5 @@
 class ButterflyBody {
-	constructor(scale) {
+	constructor(color1, color2, scale) {
         this.pos = mat4.create();
 		let width = 0.3;
 		let height = 1.7;
@@ -11,7 +11,7 @@ class ButterflyBody {
 		this.indices = [];
 
 		this.vertices.push(0, 0, 0);
-		this.colors.push(230/255.0, 0, 98/255.0, 1);
+		this.colors = this.colors.concat(color1); //concat merge the two array (push the values)
 		this.indices.push(0);
 
 		for (let theta = 0; theta < 2 * Math.PI; theta += step) {
@@ -22,7 +22,7 @@ class ButterflyBody {
 			let y = height * r * Math.sin(theta) - height / 2;
 
 			this.vertices.push(x, y, 0); // x = y symmetry
-			this.colors.push(0, 0, 1, 1);
+			this.colors = this.colors.concat(color2);
 			this.indices.push(this.indices.length-1);
 			this.indices.push(0);
 		}
