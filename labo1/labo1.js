@@ -24,15 +24,15 @@ function labo1() {
     butterflyMain = new Butterfly(gl,80);
     butterflyes = [butterflyMain]
 
-    for (let i = 1; i < 4; i++)
-		    butterflyes[i] = new Butterfly(gl,20,butterflyes[i-1].scale/1.2 );
+    for (let i = 1; i < 3; i++)
+		    butterflyes[i] = new Butterfly(gl,20,butterflyes[i-1].scale/1.2 ); // each consecutive butterfly is 1.2 time smaller than the previous one
 
     cnv.onmousemove = function(evt) {
         let cnv = evt.srcElement;
 		let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
-        butterflyes[0].setDstPos(mousepos.x, mousepos.y);
+        butterflyes[0].setDstPos(mousepos.x, mousepos.y);// the mainbutterfly will follow the mouse
         for (let i = 1; i < butterflyes.length; i++)
-		    butterflyes[i].setDstPos(butterflyes[i-1].x, butterflyes[i-1].y);
+		    butterflyes[i].setDstPos(butterflyes[i-1].x, butterflyes[i-1].y);// the other butterfly will follow the previous butterfly
     };
 
     //Start the draw loop
@@ -103,6 +103,6 @@ function draw() {
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	
 	
-	for (let i = butterflyes.length-1; i >=0; i--)
+	for (let i = butterflyes.length-1; i >=0; i--) // start from last to have the main in front
 		butterflyes[i].draw(frame);
 }
