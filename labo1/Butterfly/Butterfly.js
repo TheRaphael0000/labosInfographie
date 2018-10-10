@@ -1,13 +1,13 @@
 class Butterfly {
-	constructor(gl) {
+	constructor(gl, sampleSize) {
 		this.scale = 0.2;
 		this.gl = gl;
         this.pos = mat4.create();
         this.translate = mat4.create();
 		this.rotate = mat4.create();
 		this.body = new ButterflyBody(this.scale);
-		this.wingL = new ButterflyWingL(this.scale);
-		this.wingR = new ButterflyWingR(this.scale);
+		this.wingL = new ButterflyWingL(this.scale, sampleSize);
+		this.wingR = new ButterflyWingR(this.scale, sampleSize);
 		this.parts = [this.body, this.wingL, this.wingR];
 	}
 

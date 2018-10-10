@@ -1,6 +1,6 @@
 class ButterflyTools {
-    static getBasicWing(coefx, coefy, swap, scale) {
-        const nb = 500; //sampling
+    static getBasicWing(coefx, coefy, swap, scale, sampleSize=250) {
+        const nb = sampleSize; //sampling
         const step = 2 * Math.PI / nb;
         let vertices = [];
         let colors = [];

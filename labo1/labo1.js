@@ -15,18 +15,21 @@ let frame = 0; //framecount
 let mvMatrix = mat4.create();
 let pMatrix = mat4.create();
 
-let butterfly;
+let butterflyes;
 
 function labo1() {
     initWebGL();
     gl.clearColor(0, 0, 0, 0.02);
 
-    butterfly = new Butterfly(gl);
+	butterflyMain = new Butterfly(gl,250);
+	butterfly1 = new Butterfly(gl,20);
+	
+	butterflyes = [butterflyMain, butterfly1];
 
     cnv.onmousemove = function(evt) {
         let cnv = evt.srcElement;
-        let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
-        butterfly.moveTo(mousepos.x, mousepos.y);
+		let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
+		butterflyes[0].moveTo(mousepos.x, mousepos.y);
     };
 
     //Start the draw loop
@@ -86,13 +89,17 @@ function loop() {
 }
 
 function update() {
-    butterfly.update(frame);
+	for (let i = 0; i < butterflyes.length; i++)
+		butterflyes[i].update(frame);
+	
 }
 
 function draw() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
-
-    butterfly.draw();
+	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
+	
+	
+	for (let i = 0; i < butterflyes.length; i++)
+		butterflyes[i].draw(frame);
 }
