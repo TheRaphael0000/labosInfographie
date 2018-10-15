@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="../common/stylesheet.css">
+	<link rel="stylesheet" href="stylesheet.css">
 	<!--
         Using a cdn for the matrix lib instead of this old version
         <script src="../lib/gl-matrix-min.js"></script>
@@ -40,19 +41,24 @@
 	<script src="Butterfly/ButterflyBody.js"></script>
 	<script src="Butterfly/ButterflyWing.js"></script>
 	<script src="Butterfly/Butterfly.js"></script>
+	<script src="controls.js"></script>
 	<script src="labo1.js"></script>
 </head>
 
 <body onload="labo1()">
-	<h1>Papillion</span></h1>
+	<div id='title'>
+		<h1>Papillon</h1>
+		<img src='resources/butterfly.png'><!-- https://www.pinterest.ch/pin/742953269751751977/ -->
+	</div>
 	<h2>Laboratoire n°1 : Les bases de WebGL</h2>
 	<h3>Informations</h3>
 	<ul>
 		<li>Module : RS430.100.18.3252 - Imagerie</li>
 		<li>Cours : Infographie</li>
 		<li>Professeur : Stéphane Gobron</li>
-		<li>Date : 10 octobre 2018</li>
-		<li>Classe : INF3dlm_b</li>
+		<li>Assistants : Nicolas Sommer / Magali Stephanie Froehlich</li>
+		<li>Date : 15 octobre 2018</li>
+		<li>Classe_Groupe : INF3dlm_b</li>
 		<li>
 			Équipe n° 8
 			<ul>
@@ -65,15 +71,21 @@
 
 	<h3>Description</h3>
 	<p>
-		Le but de notre laboratoire a été de découvrir le WebGL en créant un petit papillion qui suit le curseur en battant des ailes.
+		Le but de notre laboratoire a été de découvrir le WebGL en créant un petit papillon qui suit le curseur en battant des ailes.
 		Pour ceci nous avons utilisé quelques fonctions de math (notamment en coordonnées polaires) pour générer les ailes.
-		Vu que le papillion a été réalisé en orienté objet. Il nous est ensuite venu l'idée de créer une petite famille de papillion.
+		Vu que le papillon a été réalisé en orienté objet. Il nous est ensuite venu l'idée de créer une petite famille de papillon.
+	</p>
+	<p>
+		Pour mieux se familiariser avec WebGL nous avons pris la décision de ne pas importer la bibliothèque du cours pour se permet de mieux comprendre chaque fonctions appelées par celle-ci. Des morceaux ont quand même été repris. Nous avons également
+		pris la nouvelle version de gl-Matrix (importé à l’aide d’un CDN, voir sources).
 	</p>
 
 	<h3>Contrôles</h3>
 	<ul>
 		<li>Souris : Déplacement du papillion 'parent'</li>
-		<li>Rechargement : <input type='button' value='Changer la couleur des papillions' onclick='location.reload()'></li>
+		<li>Changer la couleur des papillions : <input type='button' value='Aléatoire' id='changeButterfliesColorsButton'></li>
+		<li>Nombre de papillons : <input type='range' min='1' max='8' value='3' id='nbButterfliesRange'><span id='nbButterfliesValue'></span></li>
+		<li>Désactivé le curseur : <input type='checkbox' id='disableCursor'></li>
 	</ul>
 	<h3>Projet</h3>
 	<div class="center">
@@ -81,6 +93,27 @@
 			HTML5 is not supported
 		</canvas>
 	</div>
+	<h3>Souces</h3>
+	<p>
+		Afin de ne pas réinventé la roue à chaque ligne de code, nous avons rassemblé et adapté quelques fonctions qui nous ont été utile qui ont été trouvé sur internet (voir point d'exclamation rouge).
+	</p>
+	<p>
+        Toutes les sources sont datées du 15 octobre 2018.
+	</p>
+	<h4>Technique</h4>
+	<ul>
+		<li>WebGL documentation : <br><a class='linkitself' href='https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API'></a></li>
+		<li>Gl-Matrix utilisé (CDN) : <br><a class='linkitself' href='https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.7.1/gl-matrix-min.js'></a></li>
+		<li class='marked'>Fonction d'interpolation linéaire (Mathematical lerp): <br><a class='linkitself' href='https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support'></a></li>
+		<li class='marked'>Fonction Map de P5 (ligne 461) : <br><a class='linkitself' href='https://github.com/processing/p5.js/blob/master/src/math/calculation.js'></a></li>
+		<li class='marked'>Fonction Hsv vers Rgb : <br><a class='linkitself' href='https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately'></a></li>
+		<li class='marked'>Fonction aléatoire dans une portée : <br><a class='linkitself' href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Getting_a_random_number_between_two_values'></a></li>
+	</ul>
+	<h4>Artistique</h4>
+	<ul>
+		<li>Police de charactère Google Noto-Serif (CDN) : <br><a class='linkitself' href='https://fonts.googleapis.com/css?family=Noto+Serif'></a></li>
+		<li>Image du papillon en haut à droite : <br><a class='linkitself' href='https://www.pinterest.ch/pin/742953269751751977/'></a></li>
+	</ul>
 </body>
 
 </html>

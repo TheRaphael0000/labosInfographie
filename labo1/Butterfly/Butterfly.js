@@ -1,92 +1,99 @@
 class Butterfly {
-    constructor(gl, sampleSize, scale = 0.2) {
-        //graphic context
-        this.gl = gl;
+	constructor(gl, sampleSize, scale = 0.2) {
+		//graphic context
+		this.gl = gl;
 
-        //config of the butterfly
-        this.sampleSize = sampleSize;
-        this.scale = scale; //size of the butterfly
-        this.lerp = 0.15; //
-        this.angle = Math.PI / 3.5; //wings angle
-        this.speed = 0.1; //wings speed
+		//config of the butterfly
+		this.sampleSize = sampleSize;
+		this.scale = scale; //size of the butterfly
+		this.lerp = 0.15; //
+		this.angle = Math.PI / 3.5; //wings angle
+		this.speed = 0.1; //wings speed
 
-        //generating colorful butterflies colors
-        this.color1 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.6, 1.0]); //light color
-        this.color2 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.0, 0.4]); //dark color
+		//x, y are the actual position which are slowly lerped to the real position
+		this.x = 0;
+		this.y = 0;
+		//dstx and dsty are the cursor position
+		this.dstX = 0;
+		this.dstY = 0;
 
-        if(Math.random() > 0.5) //swap randomly between the light and dark color
-            this.color1 = [this.color2, this.color2 = this.color1][0];
+		this.pos = mat4.create();
+		this.translate = mat4.create();
+		this.rotate = mat4.create();
 
-        //x, y are the actual position which are slowly lerped to the real position
-        this.x = 0;
-        this.y = 0;
-        //dstx and dsty are the cursor position
-        this.dstX = 0;
-        this.dstY = 0;
+		this.setRandomColors();
+		this.generateParts();
+	}
 
-        this.pos = mat4.create();
-        this.translate = mat4.create();
-        this.rotate = mat4.create();
+	setRandomColors() {
+		//generating colorful butterflies colors
+		this.color1 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.6, 1.0]); //light color
+		this.color2 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.0, 0.4]); //dark color
 
-        //assembling the butterfly with subclasses, giving this (the parent to load properties)
-        this.body = new ButterflyBody(this);
-        this.wingL = new ButterflyWing(this, true);
-        this.wingR = new ButterflyWing(this, false);
-        this.parts = [this.body, this.wingL, this.wingR];
-    }
+		if (Math.random() > 0.5) //swap randomly between the light and dark color
+			this.color1 = [this.color2, this.color2 = this.color1][0];
+	}
 
-    //function call every frame with the frame number to do the peridicals animations
-    update(frame) {
-        //Lerp to destination
-        this.x = MathPlus.lerp(this.x, this.dstX, this.lerp);
-        this.y = MathPlus.lerp(this.y, this.dstY, this.lerp);
-        mat4.fromTranslation(this.translate, [this.x, this.y, 0]);
+	generateParts() {
+		//assembling the butterfly with subclasses, giving this (the parent to load properties)
+		this.body = new ButterflyBody(this);
+		this.wingL = new ButterflyWing(this, true);
+		this.wingR = new ButterflyWing(this, false);
+		this.parts = [this.body, this.wingL, this.wingR];
+	}
 
-        //Permanant rotation
-        this.rotation = mat4.create();
-        mat4.fromRotation(this.rotation, frame * 0.04, [0.3, 0.5, 0.1]);
+	//function call every frame with the frame number to do the peridicals animations
+	update(frame) {
+		//Lerp to destination
+		this.x = MathPlus.lerp(this.x, this.dstX, this.lerp);
+		this.y = MathPlus.lerp(this.y, this.dstY, this.lerp);
+		mat4.fromTranslation(this.translate, [this.x, this.y, 0]);
 
-        //Apply transformations
-        this.applyTransform();
+		//Permanant rotation
+		this.rotation = mat4.create();
+		mat4.fromRotation(this.rotation, frame * 0.04, [0.3, 0.5, 0.1]);
 
-        for (let i = 0; i < this.parts.length; i++)
-            this.parts[i].update(frame);
-    }
+		//Apply transformations
+		this.applyTransform();
 
-    //do the maths
-    applyTransform() {
-        this.pos = mat4.create(); //reset the matrix and apply the current transformations
-        mat4.multiply(this.pos, this.pos, this.translate);
-        mat4.multiply(this.pos, this.pos, this.rotation);
-    }
+		for (let i = 0; i < this.parts.length; i++)
+			this.parts[i].update(frame);
+	}
 
-    //draw every part
-    draw() {
-        for (let i = 0; i < this.parts.length; i++)
-            this.drawPart(this.parts[i]);
-    }
+	//do the maths
+	applyTransform() {
+		this.pos = mat4.create(); //reset the matrix and apply the current transformations
+		mat4.multiply(this.pos, this.pos, this.translate);
+		mat4.multiply(this.pos, this.pos, this.rotation);
+	}
 
-    //draw a part with webgl
-    drawPart(part) {
-        let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.vertices);
-        let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.colors);
-        let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, part.indices);
+	//draw every part
+	draw() {
+		for (let i = 0; i < this.parts.length; i++)
+			this.drawPart(this.parts[i]);
+	}
 
-        let partMat = mat4.create();
-        mat4.multiply(partMat, this.pos, part.pos);
-        gl.uniformMatrix4fv(prg.mvMatrixUniform, false, partMat);
+	//draw a part with webgl
+	drawPart(part) {
+		let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.vertices);
+		let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.colors);
+		let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, part.indices);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.drawElements(part.drawMode, part.vertices.length / 3 + 1, gl.UNSIGNED_SHORT, 0);
-    }
+		let partMat = mat4.create();
+		mat4.multiply(partMat, this.pos, part.pos);
+		gl.uniformMatrix4fv(prg.mvMatrixUniform, false, partMat);
 
-    //double setter for the position
-    setDstPos(x, y) {
-        this.dstX = x;
-        this.dstY = y;
-    }
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+		gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+		gl.drawElements(part.drawMode, part.vertices.length / 3 + 1, gl.UNSIGNED_SHORT, 0);
+	}
+
+	//double setter for the position
+	setDstPos(x, y) {
+		this.dstX = x;
+		this.dstY = y;
+	}
 }

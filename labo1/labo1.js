@@ -15,18 +15,13 @@ let frame = 0; //framecount
 let mvMatrix = mat4.create();
 let pMatrix = mat4.create();
 
-let butterflies;
-let nbButterflies = 3;
+let butterflies = [];
 
 function labo1() {
 	initWebGL();
 	gl.clearColor(0, 0, 0, 0.02);
 
-	butterflyMain = new Butterfly(gl, 80);
-	butterflies = [butterflyMain]
-
-	for (let i = 1; i < nbButterflies; i++)
-		butterflies[i] = new Butterfly(gl, 20, butterflies[i - 1].scale / 1.2); // each consecutive butterfly is 1.2 time smaller than the previous one
+	setButterfliesQte(nbButterfliesRange.value);
 
 	cnv.onmousemove = function(evt) {
 		let cnv = evt.srcElement;
@@ -41,6 +36,18 @@ function labo1() {
 		loop();
 		frame++;
 	}, PERIOD);
+}
+
+function setButterfliesQte(qte)
+{
+    if(butterflies.length == 0)
+	   butterflies = [new Butterfly(gl, 80)]; //adding the butterfly 0
+
+    if(qte < butterflies.length)
+        butterflies.splice(qte, butterflies.length - qte); //removing extra butterflies
+    else
+    	for (let i = butterflies.length; i < qte; i++) //adding every missing butterfly
+    		butterflies[i] = new Butterfly(gl, 20, butterflies[i - 1].scale / 1.2); // each consecutive butterfly is 1.2 time smaller than the previous one
 }
 
 function canvasToScene(cwidth, cheight, x, y) {
@@ -107,4 +114,14 @@ function draw() {
 
 	for (let i = butterflies.length - 1; i >= 0; i--) // start from last to have the main in front
 		butterflies[i].draw(frame);
+}
+
+function changeButterfliesColors()
+{
+    for(let i = 0; i < butterflies.length; i++)
+    {
+        let butterfly = butterflies[i];
+        butterfly.setRandomColors();
+		butterfly.generateParts();
+    }
 }
