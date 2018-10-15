@@ -23,14 +23,6 @@ function labo1() {
 
 	setButterfliesQte(nbButterfliesRange.value);
 
-	cnv.onmousemove = function(evt) {
-		let cnv = evt.srcElement;
-		let mousepos = canvasToScene(cnv.width, cnv.height, evt.offsetX, evt.offsetY);
-		butterflies[0].setDstPos(mousepos.x, mousepos.y); // the mainbutterfly will follow the mouse
-		for (let i = 1; i < butterflies.length; i++)
-			butterflies[i].setDstPos(butterflies[i - 1].x, butterflies[i - 1].y); // the other butterfly will follow the previous butterfly
-	};
-
 	//Start the animation loop
 	interval = setInterval(function() {
 		loop();
@@ -38,23 +30,15 @@ function labo1() {
 	}, PERIOD);
 }
 
-function setButterfliesQte(qte)
-{
-    if(butterflies.length == 0)
-	   butterflies = [new Butterfly(gl, 80)]; //adding the butterfly 0
+function setButterfliesQte(qte) {
+	if (butterflies.length == 0)
+		butterflies = [new Butterfly(gl, 80)]; //adding the butterfly 0
 
-    if(qte < butterflies.length)
-        butterflies.splice(qte, butterflies.length - qte); //removing extra butterflies
-    else
-    	for (let i = butterflies.length; i < qte; i++) //adding every missing butterfly
-    		butterflies[i] = new Butterfly(gl, 20, butterflies[i - 1].scale / 1.2); // each consecutive butterfly is 1.2 time smaller than the previous one
-}
-
-function canvasToScene(cwidth, cheight, x, y) {
-	return {
-		x: (x - cwidth / 2.0) / cwidth * 2.0,
-		y: (cheight / 2.0 - y) / cheight * 2.0
-	};
+	if (qte < butterflies.length)
+		butterflies.splice(qte, butterflies.length - qte); //removing extra butterflies
+	else
+		for (let i = butterflies.length; i < qte; i++) //adding every missing butterfly
+			butterflies[i] = new Butterfly(gl, 20, butterflies[i - 1].scale / 1.2); // each consecutive butterfly is 1.2 time smaller than the previous one
 }
 
 function initWebGL() {
@@ -116,12 +100,17 @@ function draw() {
 		butterflies[i].draw(frame);
 }
 
-function changeButterfliesColors()
+function moveButterfliesTo(x, y)
 {
-    for(let i = 0; i < butterflies.length; i++)
-    {
-        let butterfly = butterflies[i];
-        butterfly.setRandomColors();
+    butterflies[0].setDstPos(x, y); // the mainbutterfly will follow the mouse
+    for (let i = 1; i < butterflies.length; i++)
+        butterflies[i].setDstPos(butterflies[i - 1].x, butterflies[i - 1].y); // the other butterfly will follow the previous butterfly
+}
+
+function changeButterfliesColors() {
+	for (let i = 0; i < butterflies.length; i++) {
+		let butterfly = butterflies[i];
+		butterfly.setRandomColors();
 		butterfly.generateParts();
-    }
+	}
 }

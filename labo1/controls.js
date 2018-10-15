@@ -17,4 +17,14 @@
  	disableCursor.addEventListener('input', function() {
  		cnv.classList.toggle("nocursor");
  	});
+
+ 	//movements
+ 	let cnv = document.getElementById('cnv-labo1');
+ 	cnv.addEventListener("mousemove", function(evt) {
+ 		let xCnv = evt.offsetX;
+ 		let yCnv = evt.offsetY;
+ 		let xClipSpace = (xCnv - cnv.width / 2.0) / cnv.width * 2.0;
+ 		let yClipSpace = (cnv.height / 2.0 - yCnv) / cnv.height * 2.0;
+ 		moveButterfliesTo(xClipSpace, yClipSpace);
+ 	});
  });
