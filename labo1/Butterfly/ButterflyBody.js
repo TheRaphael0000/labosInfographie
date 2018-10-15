@@ -34,6 +34,6 @@ class ButterflyBody {
     }
 
     update(frame) {
-
+        //the body doesnt animate itself
     }
 }

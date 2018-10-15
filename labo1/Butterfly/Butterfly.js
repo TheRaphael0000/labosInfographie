@@ -1,7 +1,9 @@
 class Butterfly {
     constructor(gl, sampleSize, scale = 0.2) {
+        //graphic context
         this.gl = gl;
 
+        //config of the butterfly
         this.sampleSize = sampleSize;
         this.scale = scale; //size of the butterfly
         this.lerp = 0.15; //
@@ -11,8 +13,10 @@ class Butterfly {
         this.color1 = MathPlus.randomColor();
         this.color2 = MathPlus.randomColor();
 
+        //x, y are the actual position which are slowly lerped to the real position
         this.x = 0;
         this.y = 0;
+        //dstx and dsty are the cursor position
         this.dstX = 0;
         this.dstY = 0;
 
@@ -20,12 +24,14 @@ class Butterfly {
         this.translate = mat4.create();
         this.rotate = mat4.create();
 
+        //assembling the butterfly with subclasses, giving this (the parent to load properties)
         this.body = new ButterflyBody(this);
-        this.wingL = new ButterflyWingL(this);
-        this.wingR = new ButterflyWingR(this);
+        this.wingL = new ButterflyWing(this, true);
+        this.wingR = new ButterflyWing(this, false);
         this.parts = [this.body, this.wingL, this.wingR];
     }
 
+    //function call every frame with the frame number to do the peridicals animations
     update(frame) {
         //Lerp to destination
         this.x = MathPlus.lerp(this.x, this.dstX, this.lerp);
@@ -43,17 +49,20 @@ class Butterfly {
             this.parts[i].update(frame);
     }
 
+    //do the maths
     applyTransform() {
-        this.pos = mat4.create();
+        this.pos = mat4.create(); //reset the matrix and apply the current transformations
         mat4.multiply(this.pos, this.pos, this.translate);
         mat4.multiply(this.pos, this.pos, this.rotation);
     }
 
+    //draw every part
     draw() {
         for (let i = 0; i < this.parts.length; i++)
             this.drawPart(this.parts[i]);
     }
 
+    //draw a part with webgl
     drawPart(part) {
         let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.vertices);
         let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, part.colors);
@@ -71,6 +80,7 @@ class Butterfly {
         gl.drawElements(part.drawMode, part.vertices.length / 3 + 1, gl.UNSIGNED_SHORT, 0);
     }
 
+    //double setter for the position
     setDstPos(x, y) {
         this.dstX = x;
         this.dstY = y;
