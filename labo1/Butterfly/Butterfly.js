@@ -10,8 +10,12 @@ class Butterfly {
         this.angle = Math.PI / 3.5; //wings angle
         this.speed = 0.1; //wings speed
 
-        this.color1 = MathPlus.randomColor();
-        this.color2 = MathPlus.randomColor();
+        //generating colorful butterflies colors
+        this.color1 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.6, 1.0]); //light color
+        this.color2 = MathPlus.randomColorHue([0.0, 1.0], [0.9, 1.0], [0.0, 0.4]); //dark color
+
+        if(Math.random() > 0.5) //swap randomly between the light and dark color
+            this.color1 = [this.color2, this.color2 = this.color1][0];
 
         //x, y are the actual position which are slowly lerped to the real position
         this.x = 0;
