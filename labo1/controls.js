@@ -4,7 +4,7 @@
  	let nbButterfliesValue = document.getElementById('nbButterfliesValue');
  	nbButterfliesRange.addEventListener('input', function() {
  		setButterfliesQte(nbButterfliesRange.value);
- 	});
+    });
  	nbButterfliesRange.addEventListener('input', function() {
  		nbButterfliesValue.innerHTML = nbButterfliesRange.value;
  	});
