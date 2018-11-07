@@ -15,13 +15,37 @@ let frame = 0; //framecount
 let mvMatrix = mat4.create();
 let pMatrix = mat4.create();
 
-let butterflies = [];
+let vertexShader = `
+	attribute vec3 aVertexPosition;
+	attribute vec4 aColor;
+	uniform mat4 uMVMatrix;
+	uniform mat4 upMatrix;
+	varying vec4 vColor;
+
+	void main(void)
+	{
+		vColor = aColor;
+		gl_Position = upMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+		gl_PointSize = 10.0;
+	}
+`;
+
+let fragmentShader = `
+	#ifdef GL_ES
+		precision highp float;
+	#endif
+	varying vec4 vColor;
+
+	void main(void)
+	{
+		gl_FragColor = vColor;
+
+	}
+`;
 
 function labo() {
 	initWebGL();
 	gl.clearColor(0, 0, 0, 0.02);
-
-	setButterfliesQte(nbButterfliesRange.value);
 
 	//Start the animation loop
 	interval = setInterval(function() {
@@ -35,8 +59,8 @@ function initWebGL() {
 	gl = cnv.getContext("webgl");
 	prg = gl.createProgram();
 
-	addShader(gl.VERTEX_SHADER, "shader-vs");
-	addShader(gl.FRAGMENT_SHADER, "shader-fs");
+	addShader(gl.VERTEX_SHADER, vertexShader);
+	addShader(gl.FRAGMENT_SHADER, fragmentShader);
 
 	gl.linkProgram(prg);
 	gl.getProgramParameter(prg, gl.LINK_STATUS)
@@ -47,14 +71,14 @@ function initWebGL() {
 	gl.enableVertexAttribArray(prg.vertexPositionAttribute);
 	prg.colorAttribute = gl.getAttribLocation(prg, "aColor");
 	gl.enableVertexAttribArray(prg.colorAttribute);
-	prg.pMatrixUniform = gl.getUniformLocation(prg, 'uPMatrix');
+	prg.pMatrixUniform = gl.getUniformLocation(prg, 'upMatrix');
 	prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
 }
 
-function addShader(shaderType, id) {
+//add a shader
+function addShader(shaderType, shaderCode) {
 	let shader = gl.createShader(shaderType);
-	let str = document.getElementById(id).textContent;
-	gl.shaderSource(shader, str);
+	gl.shaderSource(shader, shaderCode);
 	gl.compileShader(shader);
 	gl.getProgramParameter(prg, gl.LINK_STATUS)
 	gl.attachShader(prg, shader);
@@ -82,4 +106,25 @@ function update() {
 function draw() {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
+	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
+
+	let vertices = [-1, -1, 0, 1, 1, 0, 1, -1, 0, -1, 1, 0];
+	let colors = [];
+	let indices = [];
+	for(let i = 0; i < 4; i++)
+	{
+		colors.push(1, 0, 0, 1);
+		indices.push(i);
+	}
+
+	let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, vertices);
+	let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, colors);
+	let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, indices);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+	gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+	gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+	gl.drawElements(gl.LINE_STRIP, vertices.length / 3, gl.UNSIGNED_SHORT, 0);
 }

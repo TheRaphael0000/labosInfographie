@@ -5,47 +5,20 @@
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="../common/stylesheet.css">
 	<link rel="stylesheet" href="stylesheet.css">
-	<!--
-        Using a cdn for the matrix lib instead of this old version
-        <script src="../lib/gl-matrix-min.js"></script>
-    -->
+	<!-- Gl-Matrix -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.7.1/gl-matrix-min.js"></script>
 	<!-- Google font Noto+Serif -->
 	<link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
-	<script id="shader-vs" type="x-shader/x-vertex">
-		attribute vec3 aVertexPosition;
-        attribute vec4 aColor;
-        uniform mat4 uMVMatrix;
-        uniform mat4 uPMatrix;
-        varying vec4 vColor;
-
-        void main(void)
-        {
-            vColor = aColor;
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        }
-    </script>
-	<script id="shader-fs" type="x-shader/x-fragment">
-		#ifdef GL_ES
-            precision highp float;
-        #endif
-        varying vec4 vColor;
-
-        void main(void)
-        {
-            gl_FragColor = vColor;
-        }
-    </script>
 	<script src="../common/MathPlus.js"></script>
-	<script src="labo.js"></script> <!-- A changer -->
+	<script src="labo.js"></script>
     <script src="controls.js"></script>
 </head>
 
 <body onload="labo()">
-	<div id='title'>
+	<div>
 		<h1><span style='color:red;'>LaboTitle</span></h1>
 	</div>
-	<h2>Laboratoire n°2 : Les bases de WebGL</h2>
+	<h2>Laboratoire n°<span style='color:red;'>0</span> : <span style='color:red;'>Labo sub title</span></h2>
 	<h3>Informations</h3>
 	<ul>
 		<li>Module : RS430.100.18.3252 - Imagerie</li>
