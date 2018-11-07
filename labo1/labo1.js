@@ -13,9 +13,33 @@ let frame = 0; //framecount
 
 //Camera
 let mvMatrix = mat4.create();
-let pMatrix = mat4.create();
 
 let butterflies = [];
+
+let vertexShader = `
+	attribute vec3 aVertexPosition;
+	attribute vec4 aColor;
+	uniform mat4 uMVMatrix;
+	varying vec4 vColor;
+
+	void main(void)
+	{
+		vColor = aColor;
+		gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0);
+	}
+`;
+
+let fragmentShader = `
+	#ifdef GL_ES
+		precision highp float;
+	#endif
+	varying vec4 vColor;
+
+	void main(void)
+	{
+		gl_FragColor = vColor;
+	}
+`;
 
 function labo1() {
 	initWebGL();
@@ -46,8 +70,8 @@ function initWebGL() {
 	gl = cnv.getContext("webgl");
 	prg = gl.createProgram();
 
-	addShader(gl.VERTEX_SHADER, "shader-vs");
-	addShader(gl.FRAGMENT_SHADER, "shader-fs");
+	addShader(gl.VERTEX_SHADER, vertexShader);
+	addShader(gl.FRAGMENT_SHADER, fragmentShader);
 
 	gl.linkProgram(prg);
 	gl.getProgramParameter(prg, gl.LINK_STATUS)
@@ -58,14 +82,12 @@ function initWebGL() {
 	gl.enableVertexAttribArray(prg.vertexPositionAttribute);
 	prg.colorAttribute = gl.getAttribLocation(prg, "aColor");
 	gl.enableVertexAttribArray(prg.colorAttribute);
-	prg.pMatrixUniform = gl.getUniformLocation(prg, 'uPMatrix');
 	prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
 }
 
-function addShader(shaderType, id) {
+function addShader(shaderType, shaderCode) {
 	let shader = gl.createShader(shaderType);
-	let str = document.getElementById(id).textContent;
-	gl.shaderSource(shader, str);
+	gl.shaderSource(shader, shaderCode);
 	gl.compileShader(shader);
 	gl.getProgramParameter(prg, gl.LINK_STATUS)
 	gl.attachShader(prg, shader);
@@ -93,8 +115,6 @@ function update() {
 //draw to the screen using webgl
 function draw() {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 
 	for (let i = butterflies.length - 1; i >= 0; i--) // start from last to have the main in front
 		butterflies[i].draw(frame);

@@ -12,30 +12,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.7.1/gl-matrix-min.js"></script>
 	<!-- Google font Noto+Serif -->
 	<link href="https://fonts.googleapis.com/css?family=Noto+Serif" rel="stylesheet">
-	<script id="shader-vs" type="x-shader/x-vertex">
-		attribute vec3 aVertexPosition;
-        attribute vec4 aColor;
-        uniform mat4 uMVMatrix;
-        uniform mat4 uPMatrix;
-        varying vec4 vColor;
-
-        void main(void)
-        {
-            vColor = aColor;
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        }
-    </script>
-	<script id="shader-fs" type="x-shader/x-fragment">
-		#ifdef GL_ES
-            precision highp float;
-        #endif
-        varying vec4 vColor;
-
-        void main(void)
-        {
-            gl_FragColor = vColor;
-        }
-    </script>
 	<script src="../common/MathPlus.js"></script>
 	<script src="Butterfly/ButterflyTools.js"></script>
 	<script src="Butterfly/ButterflyBody.js"></script>
