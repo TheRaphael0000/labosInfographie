@@ -26,7 +26,7 @@ let vertexShader = `
 	{
 		vColor = aColor;
 		gl_Position = upMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-		gl_PointSize = 10.0;
+		gl_PointSize = 5.0;
 	}
 `;
 
@@ -39,7 +39,6 @@ let fragmentShader = `
 	void main(void)
 	{
 		gl_FragColor = vColor;
-
 	}
 `;
 
@@ -49,7 +48,7 @@ function labo() {
 	initWebGL();
 	gl.clearColor(0, 0, 0, 0.02);
 
-    stair = new Stair(0.1, 0.8, 2*Math.PI/8, 0.2, 5);
+    stair = new Stair(0.1, 0.8, 2*Math.PI/8, 0.2, 500);
 
 	//Start the animation loop
 	interval = setInterval(function() {
