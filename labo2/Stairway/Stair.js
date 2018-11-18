@@ -74,12 +74,13 @@ class Stair {
         //sew the outer part with the top and bottom arcs
 		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]);
 
+        let color = [Math.random(), Math.random(), Math.random()];
 		for (let i = 0; i < this.vertices.length; i += 3) {
 			let x = this.vertices[i];
 			let y = this.vertices[i + 1];
 			let z = this.vertices[i + 2];
-			let dist = (x * x + y * y + z * z) ** 0.5
-			this.colors.push(0, 0, dist, 1);
+			let dist = (x * x + y * y + z * z) ** 0.5;
+			this.colors.push(...color, 1); //... = unpack, like the * in python
 		}
 	}
 
@@ -171,7 +172,6 @@ class Stair {
 	update(frame) {
         let rotation = mat4.create();
         mat4.fromRotation(rotation, Math.PI * 0.005, [1,3,5]);
-
 	}
 
 	draw(frame) {
@@ -186,8 +186,8 @@ class Stair {
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 
-		gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		// gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
 		// gl.drawElements(gl.POINTS, this.indices.length, gl.UNSIGNED_SHORT, 0);
-		// gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
 	}
 }
