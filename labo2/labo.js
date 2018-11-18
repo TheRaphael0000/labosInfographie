@@ -48,13 +48,13 @@ function labo() {
 	initWebGL();
 
     mvMatrix = mat4.create();
-    mat4.fromTranslation(mvMatrix, [0, 0, -3]); //unzoom
+    mat4.fromTranslation(mvMatrix, [0, 0, -5]); //unzoom
     pMatrix = mat4.create();
     mat4.perspective(pMatrix, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
 
 	gl.clearColor(0, 0, 0, 0.02);
 
-    stairway = new Stairway(3, 0.1, 0.8, 2*Math.PI/2, 0.2, 50);
+    stairway = new Stairway(20, 0.5, 2, 2 * Math.PI/20, 0.2, 20);
 
 	//Start the animation loop
 	interval = setInterval(function() {

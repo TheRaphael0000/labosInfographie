@@ -14,7 +14,9 @@ class Stairway {
 	generate() {
         for(let i = 0; i < this.nbStairs; i++)
         {
-            let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling)
+            let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling);
+            stair.rotateBy(i * this.angle);
+            stair.translateBy(i * this.height);
             this.staircase.push(stair);
         }
     }

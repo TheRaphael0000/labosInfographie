@@ -26,8 +26,16 @@ class Stair {
 		this.centerZ = this.height / 2;
 
 		this.generate();
-        this.applyTransform(); //i wrongly generated for our needs so i rotate it to be good
+        // this.applyTransform(); //i wrongly generated for our needs so i rotate it to be good
 	}
+
+    rotateBy(x){
+        vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.rotateZ(v, v, [0,0,0], x)});
+    }
+
+    translateBy(x){
+        vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.add(v, v, [0,0,x])});
+    }
 
     applyTransform()
     {
@@ -161,6 +169,8 @@ class Stair {
 	}
 
 	update(frame) {
+        let rotation = mat4.create();
+        mat4.fromRotation(rotation, Math.PI * 0.005, [1,3,5]);
 
 	}
 
