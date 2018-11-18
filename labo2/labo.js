@@ -12,8 +12,8 @@ const PERIOD = 1 / FRAMERATE;
 let frame = 0; //framecount
 
 //Camera
-let mvMatrix = mat4.create();
-let pMatrix = mat4.create();
+let mvMatrix;
+let pMatrix;
 
 let vertexShader = `
 	attribute vec3 aVertexPosition;
@@ -42,13 +42,19 @@ let fragmentShader = `
 	}
 `;
 
-let stair;
+let stairway;
 
 function labo() {
 	initWebGL();
+
+    mvMatrix = mat4.create();
+    mat4.fromTranslation(mvMatrix, [0, 0, -3]); //unzoom
+    pMatrix = mat4.create();
+    mat4.perspective(pMatrix, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
+
 	gl.clearColor(0, 0, 0, 0.02);
 
-    stair = new Stair(0.1, 0.8, 2*Math.PI/8, 0.2, 500);
+    stairway = new Stairway(3, 0.1, 0.8, 2*Math.PI/2, 0.2, 50);
 
 	//Start the animation loop
 	interval = setInterval(function() {
@@ -102,7 +108,7 @@ function loop(frame) {
 
 //update the geometry
 function update(frame) {
-    stair.update(frame);
+    stairway.update(frame);
 }
 
 //draw to the screen using webgl
@@ -110,6 +116,5 @@ function draw(frame) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
-
-    stair.draw();
+    stairway.draw(frame);
 }

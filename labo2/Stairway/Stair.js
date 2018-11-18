@@ -6,19 +6,13 @@ class Stair {
 		this.height = height;
 		this.sampling = sampling;
 
-        let lengthInnerArc = 2 * Math.PI * this.radius1 * (2 * Math.PI / this.theta);
-        let lengthOuterArc = 2 * Math.PI * this.radius2 * (2 * Math.PI / this.theta);
-        let sumLengthArc = lengthInnerArc + lengthOuterArc;
-        this.innerSampling = Math.floor((lengthInnerArc / sumLengthArc) * this.sampling); //sampling proporitonel to the length of the arc
-        this.outerSampling = this.sampling - this.innerSampling; //sampling proporitonel to the length of the arc
-        console.log(this.innerSampling);
-        console.log(this.outerSampling);
+		let lengthInnerArc = 2 * Math.PI * this.radius1 * (2 * Math.PI / this.theta);
+		let lengthOuterArc = 2 * Math.PI * this.radius2 * (2 * Math.PI / this.theta);
+		let sumLengthArc = lengthInnerArc + lengthOuterArc;
+		this.outerSampling = Math.floor((lengthOuterArc / sumLengthArc) * this.sampling); //sampling proporitonel to the length of the arc
+		this.innerSampling = this.sampling - this.outerSampling; // remaining
 
 		this.pos = mat4.create();
-		this.rotation = mat4.create();
-		this.translation = mat4.create();
-
-		mat4.perspective(this.pos, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
 
 		this.vertices = [];
 		this.colors = [];
@@ -32,22 +26,45 @@ class Stair {
 		this.centerZ = this.height / 2;
 
 		this.generate();
+        this.applyTransform(); //i wrongly generated for our needs so i rotate it to be good
 	}
+
+    applyTransform()
+    {
+        for(let i = 0; i < this.vertices.length; i+= 3)
+        {
+            let vin = [this.vertices[i], this.vertices[i+1], this.vertices[i+2]];
+
+            let vout = vec3.create();
+            vec3.rotateX(vout, vin, [0,0,0], Math.PI/2);
+            vec3.rotateY(vout, vout, [0,0,0], Math.PI/2);
+
+            this.vertices[i] = vout[0];
+            this.vertices[i+1] = vout[1];
+            this.vertices[i+2] = vout[2];
+        }
+    }
 
 	generate() {
 		this.generateVertex();
+        //generate the top sector
 		let sectorIndicesTop = this.generateSector(0, 0, 1, 2, 3);
+        //retangle 1
 		this.indices.push(0);
 		this.indices.push(1);
 		this.indices.push(4);
 		this.indices.push(5);
+        //generate the bottom sector
 		let sectorIndicesBottom = this.generateSector(this.height, 4, 5, 6, 7);
-		this.sewing(sectorIndicesTop[0], sectorIndicesBottom[0]); //sew the inner sector
+        //sew the inner part with the top and bottom arcs
+		this.sewing(sectorIndicesTop[0], sectorIndicesBottom[0]);
+        //retangle 2
 		this.indices.push(7);
 		this.indices.push(6);
 		this.indices.push(3);
 		this.indices.push(2);
-		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]); //sew the outer sector
+        //sew the outer part with the top and bottom arcs
+		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]);
 
 		for (let i = 0; i < this.vertices.length; i += 3) {
 			let x = this.vertices[i];
@@ -56,16 +73,14 @@ class Stair {
 			let dist = (x * x + y * y + z * z) ** 0.5
 			this.colors.push(0, 0, dist, 1);
 		}
-		console.log(this.vertices);
-		console.log(this.indices);
 	}
 
 	sewing(array1, array2) {
 		for (let i = 0; i < Math.min(array1.length, array2.length); i++) {
-            let i1 = array1[i];
-            let i2 = array2[i];
-            this.indices.push(i1);
-            this.indices.push(i2);
+			let i1 = array1[i];
+			let i2 = array2[i];
+			this.indices.push(i1);
+			this.indices.push(i2);
 		}
 	}
 
@@ -146,22 +161,13 @@ class Stair {
 	}
 
 	update(frame) {
-		mat4.fromRotation(this.rotation, frame * 0.005 + Math.PI / 8, [1, 0, 0]);
 
-		this.applyTransform();
 	}
 
-	applyTransform() {
-		this.pos = mat4.create();
-		mat4.multiply(this.pos, this.pos, this.rotation);
-	}
-
-	draw() {
+	draw(frame) {
 		let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, this.vertices);
 		let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, this.colors);
 		let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, this.indices);
-
-		gl.uniformMatrix4fv(prg.mvMatrixUniform, false, this.pos);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
@@ -170,8 +176,8 @@ class Stair {
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 
-		// gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
 		// gl.drawElements(gl.POINTS, this.indices.length, gl.UNSIGNED_SHORT, 0);
-        gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		// gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
 	}
 }
