@@ -43,13 +43,17 @@ let fragmentShader = `
 	}
 `;
 
+let stair;
+
 function labo() {
 	initWebGL();
 	gl.clearColor(0, 0, 0, 0.02);
 
+    stair = new Stair(0.1, 0.8, 2*Math.PI/8, 0.2, 5);
+
 	//Start the animation loop
 	interval = setInterval(function() {
-		loop();
+		loop(frame);
 		frame++;
 	}, PERIOD);
 }
@@ -92,39 +96,21 @@ function getBufferFromArrayElement(gl, gltype, jstype, array) {
 }
 
 //loop triggered by a setInterval
-function loop() {
-	update();
-	draw();
+function loop(frame) {
+	update(frame);
+	draw(frame);
 }
 
 //update the geometry
-function update() {
-
+function update(frame) {
+    stair.update(frame);
 }
 
 //draw to the screen using webgl
-function draw() {
+function draw(frame) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
 
-	let vertices = [-1, -1, 0, 1, 1, 0, 1, -1, 0, -1, 1, 0];
-	let colors = [];
-	let indices = [];
-	for(let i = 0; i < 4; i++)
-	{
-		colors.push(1, 0, 0, 1);
-		indices.push(i);
-	}
-
-	let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, vertices);
-	let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, colors);
-	let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, indices);
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-	gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-	gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-	gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-	gl.drawElements(gl.LINE_STRIP, vertices.length / 3, gl.UNSIGNED_SHORT, 0);
+    stair.draw();
 }
