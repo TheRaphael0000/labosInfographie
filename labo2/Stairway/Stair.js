@@ -26,7 +26,6 @@ class Stair {
 		this.centerZ = this.height / 2;
 
 		this.generate();
-        // this.applyTransform(); //i wrongly generated for our needs so i rotate it to be good
 	}
 
     rotateBy(x){
@@ -35,22 +34,6 @@ class Stair {
 
     translateBy(x){
         vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.add(v, v, [0,0,x])});
-    }
-
-    applyTransform()
-    {
-        for(let i = 0; i < this.vertices.length; i+= 3)
-        {
-            let vin = [this.vertices[i], this.vertices[i+1], this.vertices[i+2]];
-
-            let vout = vec3.create();
-            vec3.rotateX(vout, vin, [0,0,0], Math.PI/2);
-            vec3.rotateY(vout, vout, [0,0,0], Math.PI/2);
-
-            this.vertices[i] = vout[0];
-            this.vertices[i+1] = vout[1];
-            this.vertices[i+2] = vout[2];
-        }
     }
 
 	generate() {
@@ -76,10 +59,6 @@ class Stair {
 
         let color = [Math.random(), Math.random(), Math.random()];
 		for (let i = 0; i < this.vertices.length; i += 3) {
-			let x = this.vertices[i];
-			let y = this.vertices[i + 1];
-			let z = this.vertices[i + 2];
-			let dist = (x * x + y * y + z * z) ** 0.5;
 			this.colors.push(...color, 1); //... = unpack, like the * in python
 		}
 	}
