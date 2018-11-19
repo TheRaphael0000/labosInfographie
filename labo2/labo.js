@@ -44,6 +44,8 @@ let fragmentShader = `
 
 let stairway;
 
+let userControl = false;
+
 function labo() {
 	initWebGL();
 
@@ -53,7 +55,7 @@ function labo() {
 
 	gl.clearColor(0, 0, 0, 0.02);
 
-    stairway = new Stairway(50, 2, 3, 10, 0.15, 15);
+    stairway = new Stairway(50, 2, 3, 10, 0.5, 15);
 
 	//Start the animation loop
 	interval = setInterval(function() {

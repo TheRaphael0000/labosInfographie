@@ -24,20 +24,37 @@ class Stairway {
     }
 
 	update(frame) {
+        let theta;
+        let positionOnTheStairY;
+
+        if(playerControl)
+        {
+            //Bounding ypos
+            if(yPos > this.radius2)
+                yPos = this.radius2;
+            if(yPos < this.radius1)
+                yPos = this.radius1;
+
+            positionOnTheStairY = yPos;
+            theta = xzPos * PERIOD / 2000 + 5*Math.PI / 8;
+            frame = xzPos;
+        }
+        else
+        {
+            positionOnTheStairY = (this.radius2 + this.radius1) / 2;
+            theta = frame * PERIOD / 2000 + 5*Math.PI / 8;//2000 = slow coef
+            xzPos = frame;
+        }
+
         //todo : move in the shader code and only link the theta when finish
         mvMatrix = mat4.create();
-        let theta = frame * PERIOD / 2000 - 1.25*Math.PI; //2000 = slow coef
+        let x = positionOnTheStairY * Math.cos(theta);
+        let y = positionOnTheStairY * Math.sin(theta);
+        let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
 
-        let c = this.radius2;
-        let x = c * Math.cos(theta);
-        let y = c * Math.sin(theta);
-
-        mat4.rotate(mvMatrix, mvMatrix, Math.PI/2, [1,0,0]);
-        mat4.rotate(mvMatrix, mvMatrix, -theta - 2*Math.PI/8, [0,0,1]);
-        let h = 1//(theta / 2 * Math.PI) * (this.height * this.nbStairsPerRound);
-        mat4.translate(mvMatrix, mvMatrix, [x, y, h]);
-
-        // console.log(theta);
+        mat4.rotate(mvMatrix, mvMatrix, Math.PI/2 + yCamera, [1,0,0]);
+        mat4.rotate(mvMatrix, mvMatrix, -theta - 2*Math.PI/8 - xCamera, [0,0,1]);
+        mat4.translate(mvMatrix, mvMatrix, [x, y, z]);
 	}
 
 	draw(frame) {

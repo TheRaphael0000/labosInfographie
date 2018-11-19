@@ -13,10 +13,11 @@
 	<script src="Stairway/Stairway.js"></script>
 	<script src="Stairway/Stair.js"></script>
 	<script src="labo.js"></script>
-    <script src="controls.js"></script>
+	<script src="controls.js"></script>
+	<script src="startup.js"></script>
 </head>
 
-<body onload="labo()">
+<body>
 	<div>
 		<h1>Stairway to Heaven</h1>
 	</div>
@@ -44,9 +45,25 @@
 		<span style='color:red;'>todo</span>
 	</p>
 
-	<h3>Contrôles</h3>
+	<h3>Utilisation</h3>
+	<h4>Génération de l'escalier</h4>
 	<ul>
-		<li><span style='color:red;'>liste des controls</span></li>
+		<li>Nombre de marches : <input id='nbStairs-input' type='range' min='10' max='100' value='50'><span id='nbStairs-label'></span></li>
+        <li>Largeur de l'escalier : <input id='widthStair-input' type='range' min='20' max='200' value='100'><span id='widthStair-label'></span></li>
+        <li>Rayon de l'espace central: <input id='radius1-input' type='range' min='20' max='200' value='100'><span id='radius1-label'></span></li>
+        <li>Nombre de marche par tours : <input id='nbStairsPerRound-input' type='range' min='10' max='200' value='100'><span id='nbStairsPerRound-label'></span></li>
+        <li>Hauteur d'une marche : <input id='height-input' type='range' min='10' max='200' value='100'><span id='height-label'></span></li>
+	</ul>
+    <h4>Contrôles</h4>
+	<ul>
+		<li>Clique sur le canevas pour contrôler l'animation</li>
+		<ul>
+			<li>Souris pour controler la camera</li>
+			<ul>
+				<li>Sensibilité : <input id='sensibility-input' type='range' min='20' max='200' value='100'><span id='sensibility-label'></span></li>
+			</ul>
+			<li>W/A/S/D pour controler la position</li>
+		</ul>
 	</ul>
 	<h3>Projet</h3>
 	<div class="center">
@@ -56,11 +73,12 @@
 	</div>
 	<h3>Souces</h3>
 	<p>
-        Toutes les sources sont datées du 28 novembre 2018.
+		Toutes les sources sont datées du 28 novembre 2018.
 	</p>
 	<h4>Technique</h4>
 	<ul>
-		<li>Link : <br><a class='linkitself' href='http://link'></a></li>
+		<li>Helix : <br><a class='linkitself' href='https://math.stackexchange.com/questions/804702/equation-of-a-3d-spiral'></a></li>
+		<li>Pointer Lock : <br><a class='linkitself' href='https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API'></a></li>
 	</ul>
 	<h4>Artistique</h4>
 	<ul>
