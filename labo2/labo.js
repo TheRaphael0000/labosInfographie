@@ -49,9 +49,8 @@ function labo() {
 
 	mvMatrix = mat4.create();
 	pMatrix = mat4.create();
-	mat4.perspective(pMatrix, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
 
-	gl.clearColor(0, 0, 0, 0.1);
+	gl.clearColor(0, 0, 0, 0.01);
 
 	//Start the animation loop
 	interval = setInterval(function() {
