@@ -1,13 +1,17 @@
 class Stairway {
-	constructor(nbStairs, radius1, radius2, nbStairsPerRound, height, sampling) {
+	constructor(nbStairs, radius1, widthStair, nbStairsPerRound, height, sampling) {
 		this.nbStairs = nbStairs;
 		this.radius1 = radius1;
-		this.radius2 = radius2;
+        this.widthStair = widthStair
+		this.radius2 = radius1 + widthStair;
         this.nbStairsPerRound = nbStairsPerRound;
 		this.height = height;
 		this.sampling = sampling;
 
 		this.angle = 2 * Math.PI / nbStairsPerRound;
+        this.centerOfStairY = (this.radius2 + this.radius1) / 2;
+
+        yPos = this.centerOfStairY;
 
         this.staircase = [];
 		this.generate();
@@ -37,13 +41,11 @@ class Stairway {
 
             positionOnTheStairY = yPos;
             theta = xzPos * PERIOD / 2000 + 5*Math.PI / 8;
-            frame = xzPos;
         }
         else
         {
-            positionOnTheStairY = (this.radius2 + this.radius1) / 2;
+            positionOnTheStairY = this.centerOfStairY;
             theta = frame * PERIOD / 2000 + 5*Math.PI / 8;//2000 = slow coef
-            xzPos = frame;
         }
 
         //todo : move in the shader code and only link the theta when finish

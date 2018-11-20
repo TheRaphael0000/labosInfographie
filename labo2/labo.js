@@ -42,20 +42,16 @@ let fragmentShader = `
 	}
 `;
 
-let stairway;
-
-let userControl = false;
+let stairway = null;
 
 function labo() {
 	initWebGL();
 
-    mvMatrix = mat4.create();
-    pMatrix = mat4.create();
-    mat4.perspective(pMatrix, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
+	mvMatrix = mat4.create();
+	pMatrix = mat4.create();
+	mat4.perspective(pMatrix, Math.PI / 3, cnv.width / cnv.height, 0.1, 10000);
 
-	gl.clearColor(0, 0, 0, 0.02);
-
-    stairway = new Stairway(50, 2, 3, 10, 0.5, 15);
+	gl.clearColor(0, 0, 0, 0.1);
 
 	//Start the animation loop
 	interval = setInterval(function() {
@@ -109,7 +105,8 @@ function loop(frame) {
 
 //update the geometry
 function update(frame) {
-    stairway.update(frame);
+	if (stairway != null)
+		stairway.update(frame);
 }
 
 //draw to the screen using webgl
@@ -117,5 +114,6 @@ function draw(frame) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
-    stairway.draw(frame);
+	if (stairway != null)
+		stairway.draw(frame);
 }
