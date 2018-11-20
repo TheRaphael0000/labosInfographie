@@ -12,7 +12,7 @@ class Stair {
 		this.outerSampling = Math.floor((lengthOuterArc / sumLengthArc) * this.sampling); //sampling proporitonel to the length of the arc
 		this.innerSampling = this.sampling - this.outerSampling; // remaining
 
-		this.pos = mat4.create();
+		//this.pos = mat4.create();
 
 		this.vertices = [];
 		this.colors = [];

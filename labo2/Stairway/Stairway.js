@@ -61,15 +61,24 @@ class Stairway {
 		let y = positionOnTheStairY * Math.sin(theta);
 		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
 
-        // console.log(z);
-
 		mat4.rotate(mvMatrix, mvMatrix, Math.PI / 2 + yCamera, [1, 0, 0]);
 		mat4.rotate(mvMatrix, mvMatrix, -theta - 2 * Math.PI / 8 - xCamera, [0, 0, 1]);
 		mat4.translate(mvMatrix, mvMatrix, [x, y, z]);
 	}
 
 	draw(frame) {
-		for (let i = 0; i < this.nbStairs; i++) {
+		/***********
+		 * methode temporaire, à ajuster après déplacement des marches en fonction de la position
+		 ************/
+		let theta = xzPos + Math.PI;
+		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
+		let currentStairIndex = Math.floor(z/this.height);
+
+		for (let i = 0; i < currentStairIndex; i++) {
+			let stair = this.staircase[i];
+			stair.draw(frame);
+		}
+		for (let i = this.nbStairs-1; i >= currentStairIndex; i--) {
 			let stair = this.staircase[i];
 			stair.draw(frame);
 		}
