@@ -121,6 +121,10 @@ function updateValuesAndLabelsControles() {
 }
 
 function generateStairway() {
+	xCamera = 0;
+	yCamera = 0;
+	xzPos = 0;
+	yPos = 0;
 	generateStairway_input.style.display = "none";
 	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value);
 }
