@@ -25,6 +25,8 @@ class Stair {
 		this.centerY = centerRadius * Math.sin(this.theta / 2);
 		this.centerZ = this.height / 2;
 
+		this.currentZ = 0;
+
 		this.generate();
 	}
 
@@ -33,7 +35,8 @@ class Stair {
     }
 
     translateBy(x){
-        vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.add(v, v, [0,0,x])});
+		vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.add(v, v, [0,0,x])});
+		this.currentZ -= x;
     }
 
 	generate() {

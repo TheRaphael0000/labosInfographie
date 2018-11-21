@@ -22,6 +22,7 @@ class Stairway {
 			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling);
 			stair.rotateBy(i * this.angle);
 			stair.translateBy(-i * this.height);
+			console.log(-i * this.height);
 			this.staircase.push(stair);
 		}
 	}
@@ -30,17 +31,17 @@ class Stairway {
 		let theta;
 		let positionOnTheStairY;
 
-        const magicSpeedConstant = PERIOD / 1000; //i used the period to be relevent at any fps
+        const speedConstant = PERIOD / 1000; //i used the period to be relevent at any fps
 
 		if (playerControl) {
 			if (keyW)
-				xzPos += xzSpeed_value * magicSpeedConstant;
+				xzPos += xzSpeed_value * speedConstant;
 			if (keyS)
-				xzPos -= xzSpeed_value * magicSpeedConstant;
+				xzPos -= xzSpeed_value * speedConstant;
 			if (keyA)
-				yPos += xzSpeed_value * magicSpeedConstant;
+				yPos += xzSpeed_value * speedConstant;
 			if (keyD)
-				yPos -= xzSpeed_value * magicSpeedConstant;
+				yPos -= xzSpeed_value * speedConstant;
 
 			//Bounding ypos
 			if (yPos > this.radius2)
@@ -51,7 +52,7 @@ class Stairway {
 			positionOnTheStairY = yPos;
 		} else {
 			positionOnTheStairY = this.centerOfStairY;
-			xzPos += xzSpeed_value * magicSpeedConstant;
+			xzPos += xzSpeed_value * speedConstant;
 		}
 		theta = xzPos + Math.PI; //theta == positon on the spiral
 
@@ -67,18 +68,17 @@ class Stairway {
 	}
 
 	draw(frame) {
-		/***********
-		 * methode temporaire, à ajuster après déplacement des marches en fonction de la position
-		 ************/
 		let theta = xzPos + Math.PI;
 		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
-		let currentStairIndex = Math.floor(z/this.height);
 
-		for (let i = 0; i < currentStairIndex; i++) {
-			let stair = this.staircase[i];
+		let bellowStairIndex = 0;
+		while(this.staircase[bellowStairIndex].currentZ<z && bellowStairIndex < this.nbStairs-1)
+		{
+			let stair = this.staircase[bellowStairIndex];
 			stair.draw(frame);
+			bellowStairIndex++;
 		}
-		for (let i = this.nbStairs-1; i >= currentStairIndex; i--) {
+		for (let i = this.nbStairs-1; i >= bellowStairIndex; i--) {
 			let stair = this.staircase[i];
 			stair.draw(frame);
 		}
