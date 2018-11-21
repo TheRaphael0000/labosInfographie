@@ -45,7 +45,7 @@ function loadControls() {
 	updateValuesAndLabelsGeneration(true);
 	updateValuesAndLabelsControles();
 	generateStairway();
-    setFOV();
+	setFOV();
 }
 
 function ui() {
@@ -83,9 +83,9 @@ function ui() {
 }
 
 function setFOV() {
-    fov_value = fov.value;
-    document.getElementById("fov-label").innerHTML = fov_value + "°";
-    mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / cnv.height, 0.01, 10000);
+	fov_value = fov.value;
+	document.getElementById("fov-label").innerHTML = fov_value + "°";
+	mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / cnv.height, 0.01, 10000);
 }
 
 function updateValuesAndLabelsGeneration(showbutton = false) {
@@ -149,6 +149,18 @@ function capture() {
 				updatePosition(e, false)
 			});
 			playerControl = false;
+		}
+	});
+
+
+	document.addEventListener("fullScreenChange", function() {
+		if (document.mozFullScreen || document.webkitIsFullScreen) {
+			var rect = cnv.getBoundingClientRect();
+			cnv.width = rect.width;
+			cnv.height = rect.height;
+		} else {
+			cnv.width = 500;
+			cnv.height = 400;
 		}
 	});
 
