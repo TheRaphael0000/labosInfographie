@@ -20,20 +20,28 @@ class Stairway {
 		this.generate();
 	}
 
+	/**
+	 * generate stairs and place them so that the camera is placed in a position where he can see a maximum of stairs
+	 */
 	generate() {
 		let bottom;
 		let top;
+
+		let artificialOffset = Math.floor(this.nbStairs/6);// due to perspective, placing the camera right in the middle of stairs will often show
+		// a truncated stair at the top and a full one at the bottom
+		// to optimise this, an offset to the position of the stairs is introduced
+
 		if (this.nbStairs %2 == 0)
 		{
-			bottom = -this.nbStairs/2;
-			top = this.nbStairs/2;
+			bottom = -this.nbStairs/2 + artificialOffset;
+			top = this.nbStairs/2 + artificialOffset;
 		}
 		else
 		{
-			bottom = -Math.floor(this.nbStairs/2);
-			top = Math.floor(this.nbStairs/2)+1;
+			bottom = -Math.floor(this.nbStairs/2) + artificialOffset;
+			top = Math.floor(this.nbStairs/2)+1 + artificialOffset;
 		}
-		for (let i = bottom; i < top; i++) { // create and arrange stairs to have the camera in the middle of them
+		for (let i = bottom; i < top; i++) { // create and arrange stairs
 			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling);
 			stair.rotateBy(i * this.angle);
 			stair.translateBy(-i * this.height);
