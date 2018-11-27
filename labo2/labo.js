@@ -15,30 +15,30 @@ let frame = 0; //framecount
 let mvMatrix;
 let pMatrix;
 
-let vertexShader = `
-	attribute vec3 aVertexPosition;
-	attribute vec4 aColor;
+const vertexShader = `
+	attribute vec4 aVertexPosition;
+    attribute vec2 aTextureCoord;
+
 	uniform mat4 uMVMatrix;
 	uniform mat4 upMatrix;
-	varying vec4 vColor;
+
+	varying highp vec2 vTextureCoord;
 
 	void main(void)
 	{
-		vColor = aColor;
-		gl_Position = upMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-		gl_PointSize = 5.0;
+		gl_Position = upMatrix * uMVMatrix * aVertexPosition;
+        vTextureCoord = aTextureCoord;
 	}
 `;
 
-let fragmentShader = `
-	#ifdef GL_ES
-		precision highp float;
-	#endif
-	varying vec4 vColor;
+const fragmentShader = `
+	varying highp vec2 vTextureCoord;
+
+	uniform sampler2D uSampler;
 
 	void main(void)
 	{
-		gl_FragColor = vColor;
+		gl_FragColor = texture2D(uSampler, vTextureCoord);
 	}
 `;
 
@@ -73,11 +73,12 @@ function initWebGL() {
 	gl.viewport(0, 0, cnv.width, cnv.height);
 
 	prg.vertexPositionAttribute = gl.getAttribLocation(prg, "aVertexPosition");
-	gl.enableVertexAttribArray(prg.vertexPositionAttribute);
-	prg.colorAttribute = gl.getAttribLocation(prg, "aColor");
-	gl.enableVertexAttribArray(prg.colorAttribute);
+	prg.textureCoord = gl.getAttribLocation(prg, "aTextureCoord");
 	prg.pMatrixUniform = gl.getUniformLocation(prg, 'upMatrix');
 	prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
+    prg.uSampler = gl.getUniformLocation(prg, 'uSampler')
+
+	gl.enableVertexAttribArray(prg.vertexPositionAttribute);
 }
 
 //add a shader
@@ -89,11 +90,10 @@ function addShader(shaderType, shaderCode) {
 	gl.attachShader(prg, shader);
 }
 
-function getBufferFromArrayElement(gl, gltype, jstype, array) {
+function bindBufferWithData(gltype, jstype, array) {
 	let buff = gl.createBuffer();
-	gl.bindBuffer(gltype, buff);
-	gl.bufferData(gltype, new jstype(array), gl.STATIC_DRAW);
-	return buff;
+    gl.bindBuffer(gltype, buff);
+	gl.bufferData(gltype, new jstype(array), gl.DYNAMIC_DRAW);
 }
 
 //loop triggered by a setInterval

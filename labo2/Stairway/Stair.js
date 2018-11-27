@@ -15,8 +15,11 @@ class Stair {
 		//this.pos = mat4.create();
 
 		this.vertices = [];
-		this.colors = [];
 		this.indices = [];
+        this.texCoords = [];
+
+        this.texture = null;
+        this.textureBASE64 = "data:image/png;base64," + "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACFSURBVDhPY3wro/KfgQIANkAomRnKJQ28m/sXyYDim1BhIkGvOqYB77RUoLL4gdC1O3ADmKBicAAyDB9GBxgGgAHIO9gwFoDdACAAeQcZ4wI4DQABXM5GBngNIAbgNQAUyiCMD+A0ABRVyBgXwG4AMI6xYiyA4oRExaRMBoAbAOWTARgYAOATUzn0CE+YAAAAAElFTkSuQmCC";
 
 		this.width = this.radius2 - this.radius1;
 
@@ -60,11 +63,36 @@ class Stair {
         //sew the outer part with the top and bottom arcs
 		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]);
 
-        let color = [Math.random(), Math.random(), Math.random()];
-		for (let i = 0; i < this.vertices.length; i += 3) {
-			this.colors.push(...color, 1); //... = unpack, like the * in python
-		}
+        this.loadTexture();
+		bindBufferWithData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array, this.indices);
+        bindBufferWithData(gl.ARRAY_BUFFER, Float32Array, this.texCoords);
 	}
+
+    loadTexture() {
+        const texture = gl.createTexture();
+
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const width = 1;
+        const height = 1;
+        const border = 0;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+
+        const image = new Image();
+        image.onload = function() {
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        };
+        image.src = this.textureBASE64;
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.uniform1i(prg.uSampler, 0);
+    }
 
 	sewing(array1, array2) {
 		for (let i = 0; i < Math.min(array1.length, array2.length); i++) {
@@ -157,16 +185,10 @@ class Stair {
 	}
 
 	draw(frame) {
-		let vertexBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, this.vertices);
-		let colorBuffer = getBufferFromArrayElement(gl, gl.ARRAY_BUFFER, Float32Array, this.colors);
-		let indexBuffer = getBufferFromArrayElement(gl, gl.ELEMENT_ARRAY_BUFFER, Uint16Array, this.indices);
+		bindBufferWithData(gl.ARRAY_BUFFER, Float32Array, this.vertices);
+        //
 
-		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-		gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-		gl.vertexAttribPointer(prg.colorAttribute, 4, gl.FLOAT, false, 0, 0);
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-
 
 		// gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
 		// gl.drawElements(gl.POINTS, this.indices.length, gl.UNSIGNED_SHORT, 0);
