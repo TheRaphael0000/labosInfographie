@@ -17,7 +17,7 @@ let pMatrix;
 
 const vertexShader = `
 	attribute vec4 aVertexPosition;
-    attribute vec2 aTextureCoord;
+	attribute vec2 aTextureCoord;
 
 	uniform mat4 uMVMatrix;
 	uniform mat4 upMatrix;
@@ -27,7 +27,7 @@ const vertexShader = `
 	void main(void)
 	{
 		gl_Position = upMatrix * uMVMatrix * aVertexPosition;
-        vTextureCoord = aTextureCoord;
+		vTextureCoord = aTextureCoord;
 	}
 `;
 
@@ -76,7 +76,7 @@ function initWebGL() {
 	prg.textureCoord = gl.getAttribLocation(prg, "aTextureCoord");
 	prg.pMatrixUniform = gl.getUniformLocation(prg, 'upMatrix');
 	prg.mvMatrixUniform = gl.getUniformLocation(prg, 'uMVMatrix');
-    prg.uSampler = gl.getUniformLocation(prg, 'uSampler')
+	prg.uSampler = gl.getUniformLocation(prg, 'uSampler')
 
 	gl.enableVertexAttribArray(prg.vertexPositionAttribute);
 }
@@ -88,12 +88,6 @@ function addShader(shaderType, shaderCode) {
 	gl.compileShader(shader);
 	gl.getProgramParameter(prg, gl.LINK_STATUS)
 	gl.attachShader(prg, shader);
-}
-
-function bindBufferWithData(gltype, jstype, array) {
-	let buff = gl.createBuffer();
-    gl.bindBuffer(gltype, buff);
-	gl.bufferData(gltype, new jstype(array), gl.DYNAMIC_DRAW);
 }
 
 //loop triggered by a setInterval
@@ -113,6 +107,7 @@ function draw(frame) {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.uniformMatrix4fv(prg.pMatrixUniform, false, pMatrix);
 	gl.uniformMatrix4fv(prg.mvMatrixUniform, false, mvMatrix);
+
 	if (stairway != null)
 		stairway.draw(frame);
 }

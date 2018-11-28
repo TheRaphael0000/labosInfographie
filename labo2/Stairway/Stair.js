@@ -14,13 +14,6 @@ class Stair {
 
 		//this.pos = mat4.create();
 
-		this.vertices = [];
-		this.indices = [];
-        this.texCoords = [];
-
-        this.texture = null;
-        this.textureBASE64 = "data:image/png;base64," + "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACFSURBVDhPY3wro/KfgQIANkAomRnKJQ28m/sXyYDim1BhIkGvOqYB77RUoLL4gdC1O3ADmKBicAAyDB9GBxgGgAHIO9gwFoDdACAAeQcZ4wI4DQABXM5GBngNIAbgNQAUyiCMD+A0ABRVyBgXwG4AMI6xYiyA4oRExaRMBoAbAOWTARgYAOATUzn0CE+YAAAAAElFTkSuQmCC";
-
 		this.width = this.radius2 - this.radius1;
 
 		let centerRadius = this.width / 2 + this.radius1;
@@ -30,69 +23,59 @@ class Stair {
 
 		this.currentZ = 0;
 
+		this.vertices = [];
+		this.verticesBuff = gl.createBuffer();
+		this.indices = [];
+		this.indicesBuff = gl.createBuffer();
+		this.texCoords = [];
+		this.texCoordsBuff = gl.createBuffer();
+
 		this.generate();
+
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.DYNAMIC_DRAW);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.DYNAMIC_DRAW);
+
+		gl.enableVertexAttribArray(prg.textureCoord);
+		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
 	}
 
-    rotateBy(x){
-        vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.rotateZ(v, v, [0,0,0], x)});
-    }
+	rotateBy(x) {
+		vec3.forEach(this.vertices, 0, 0, 0, function(v) {
+			vec3.rotateZ(v, v, [0, 0, 0], x)
+		});
+	}
 
-    translateBy(x){
-		vec3.forEach(this.vertices, 0, 0, 0, function(v){vec3.add(v, v, [0,0,x])});
+	translateBy(x) {
+		vec3.forEach(this.vertices, 0, 0, 0, function(v) {
+			vec3.add(v, v, [0, 0, x])
+		});
 		this.currentZ -= x;
-    }
+	}
 
 	generate() {
 		this.generateVertex();
-        //generate the top sector
+		//generate the top sector
 		let sectorIndicesTop = this.generateSector(0, 0, 1, 2, 3);
-        //retangle 1
+		//retangle 1
 		this.indices.push(0);
 		this.indices.push(1);
 		this.indices.push(4);
 		this.indices.push(5);
-        //generate the bottom sector
+		//generate the bottom sector
 		let sectorIndicesBottom = this.generateSector(this.height, 4, 5, 6, 7);
-        //sew the inner part with the top and bottom arcs
+		//sew the inner part with the top and bottom arcs
 		this.sewing(sectorIndicesTop[0], sectorIndicesBottom[0]);
-        //retangle 2
+		//retangle 2
 		this.indices.push(7);
 		this.indices.push(6);
 		this.indices.push(3);
 		this.indices.push(2);
-        //sew the outer part with the top and bottom arcs
+		//sew the outer part with the top and bottom arcs
 		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]);
-
-        this.loadTexture();
-		bindBufferWithData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array, this.indices);
-        bindBufferWithData(gl.ARRAY_BUFFER, Float32Array, this.texCoords);
 	}
-
-    loadTexture() {
-        const texture = gl.createTexture();
-
-        const level = 0;
-        const internalFormat = gl.RGBA;
-        const width = 1;
-        const height = 1;
-        const border = 0;
-        const srcFormat = gl.RGBA;
-        const srcType = gl.UNSIGNED_BYTE;
-
-        const image = new Image();
-        image.onload = function() {
-          gl.bindTexture(gl.TEXTURE_2D, texture);
-          gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        };
-        image.src = this.textureBASE64;
-
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.uniform1i(prg.uSampler, 0);
-    }
 
 	sewing(array1, array2) {
 		for (let i = 0; i < Math.min(array1.length, array2.length); i++) {
@@ -111,22 +94,31 @@ class Stair {
 
 		//Top sector
 		this.vertices.push(this.radius1, 0, 0); //0
+		this.texCoords.push(0.0, 0.0);
 		this.vertices.push(this.radius2, 0, 0); //1
+		this.texCoords.push(1.0, 0.0);
 
 		this.vertices.push(x2, y2, 0); //2
+		this.texCoords.push(1.0, 1.0);
 		this.vertices.push(x1, y1, 0); //3
+		this.texCoords.push(0.0, 1.0);
 
 		//Bottom sector
 		this.vertices.push(this.radius1, 0, this.height); //4
+		this.texCoords.push(0.0, 0.0);
 		this.vertices.push(this.radius2, 0, this.height); //5
+		this.texCoords.push(1.0, 0.0);
 
 		this.vertices.push(x2, y2, this.height); //6
+		this.texCoords.push(1.0, 1.0);
 		this.vertices.push(x1, y1, this.height); //7
+		this.texCoords.push(0.0, 1.0);
 	}
 
 	generateSector(z, a, b, c, d) {
 		let centerPos = this.vertices.length / 3;
 		this.vertices.push(this.centerX, this.centerY, z);
+		this.texCoords.push(0.5, 0.5);
 
 		let outerSector = [];
 		let innerSector = [];
@@ -144,6 +136,7 @@ class Stair {
 				let outerX = this.radius2 * Math.cos(i);
 				let outerY = this.radius2 * Math.sin(i);
 				this.vertices.push(outerX, outerY, z);
+				this.texCoords.push(0.5, 0.5);
 			}
 			let afterSection = this.vertices.length / 3;
 			for (let i = beforeSection; i < afterSection; i++) {
@@ -167,6 +160,7 @@ class Stair {
 				let innerX = this.radius1 * Math.cos(i);
 				let innerY = this.radius1 * Math.sin(i);
 				this.vertices.push(innerX, innerY, z);
+				this.texCoords.push(0.5, 0.5);
 			}
 			let afterSection = this.vertices.length / 3;
 			for (let i = beforeSection; i < afterSection; i++) {
@@ -180,13 +174,14 @@ class Stair {
 	}
 
 	update(frame) {
-        let rotation = mat4.create();
-        mat4.fromRotation(rotation, Math.PI * 0.005, [1,3,5]);
+		let rotation = mat4.create();
+		mat4.fromRotation(rotation, Math.PI * 0.005, [1, 3, 5]);
 	}
 
 	draw(frame) {
-		bindBufferWithData(gl.ARRAY_BUFFER, Float32Array, this.vertices);
-        //
+		this.verticesBuff = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuff);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.DYNAMIC_DRAW);
 
 		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
