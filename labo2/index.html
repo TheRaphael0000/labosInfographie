@@ -51,14 +51,19 @@
 	<h3>Utilisation</h3>
 	<h4>Génération de l'escalier</h4>
 	<ul>
-		<li>Nombre de marches : <input id='nbStairs-input' type='range' min='10' max='100' value='50'><span id='nbStairs-label'></span></li>
-		<li>Largeur des marches : <input id='widthStair-input' type='range' min='20' max='2000' value='100'><span id='widthStair-label'></span></li>
-		<li>Rayon de l'espace central: <input id='radius1-input' type='range' min='0' max='2000' value='100'><span id='radius1-label'></span></li>
-		<li>Nombre de marche par tours : <input id='nbStairsPerRound-input' type='range' min='10' max='30' value='20'><span id='nbStairsPerRound-label'></span></li>
-		<li>Hauteur d'une marche : <input id='height-input' type='range' min='10' max='50' value='20'><span id='height-label'></span></li>
-		<li>Échantillonage d'une marche : <input id='sampling-input' type='range' min='10' max='200' value='30'><span id='sampling-label'></span></li>
-		<input class='center' id='generateStairway-input' type='button' value='Générer'>
+		<li><input id='nbStairs-input' type='range' min='10' max='100' value='50'> Nombre de marches : <span id='nbStairs-label'></span></li>
+		<li><input id='widthStair-input' type='range' min='20' max='2000' value='100'> Largeur des marches : <span id='widthStair-label'></span></li>
+		<li><input id='radius1-input' type='range' min='0' max='2000' value='100'> Rayon de l'espace central: <span id='radius1-label'></span></li>
+		<li><input id='nbStairsPerRound-input' type='range' min='10' max='30' value='20'> Nombre de marche par tours : <span id='nbStairsPerRound-label'></span></li>
+		<li><input id='height-input' type='range' min='10' max='50' value='20'> Hauteur d'une marche : <span id='height-label'></span></li>
+		<li><input id='sampling-input' type='range' min='10' max='200' value='30'> Échantillonage d'une marche : <span id='sampling-label'></span></li>
+        <li>Methode de génération</li>
+        <ul id='generationMethod'>
+			<li><label><input type='radio' name='generationMethod'> : Secteurs de cercles</label></li>
+			<li><label><input type='radio' name='generationMethod'> : Trapèzes</label></li>
+		</ul>
 	</ul>
+    <input class='center' id='generateStairway-input' type='button' value='Générer'>
 	<h4>Contrôles</h4>
 	<ul>
 		<li>Clique sur le canevas pour contrôler l'animation</li>
@@ -77,15 +82,6 @@
 				<li>Vitesse : <input id='xzSpeed-input' type='range' min='-200' max='200' value='100'><span id='xzSpeed-label'></span><i>, une vitesse négative inverse les contrôles W et S</i></li>
 			</ul>
 		</ul>
-        <li>Debug :</li>
-        <ul>
-            Draw method :
-            <ul id='drawMethod'>
-                <li><label>TRIANGLE_STRIP : <input type='radio' name='drawMethod' checked></label></li>
-                <li><label>LINE_LOOP : <input type='radio' name='drawMethod'></label></li>
-                <li><label>TRIANGLES : <input type='radio' name='drawMethod'></label></li>
-            </ul>
-        </ul>
 	</ul>
 	<h3>Projet</h3>
 	<div class="center">

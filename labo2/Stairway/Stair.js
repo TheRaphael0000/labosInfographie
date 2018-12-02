@@ -1,10 +1,11 @@
 class Stair {
-	constructor(radius1, radius2, theta, height, sampling) {
+	constructor(radius1, radius2, theta, height, sampling, method) {
 		this.radius1 = radius1;
 		this.radius2 = radius2;
 		this.theta = theta;
 		this.height = height;
 		this.sampling = sampling;
+		this.method = method;
 
 		let lengthInnerArc = 2 * Math.PI * this.radius1 * (2 * Math.PI / this.theta);
 		let lengthOuterArc = 2 * Math.PI * this.radius2 * (2 * Math.PI / this.theta);
@@ -30,18 +31,16 @@ class Stair {
 		this.texCoords = [];
 		this.texCoordsBuff = gl.createBuffer();
 
-        this.drawMethod = gl.TRIANGLE_STRIP;
 
-		this.generate();
-
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
-
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
-
-		gl.enableVertexAttribArray(prg.textureCoord);
-		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
+		this.drawMethod = [gl.TRIANGLE_STRIP, gl.TRIANGLES];
+		switch (this.method) {
+			case 0:
+				this.generateCircleShape();
+				break;
+			case 1:
+				this.generateTrapezeShape();
+				break;
+		}
 	}
 
 	rotateBy(x) {
@@ -57,7 +56,18 @@ class Stair {
 		this.currentZ -= x;
 	}
 
-	generate() {
+	bindBuffers() {
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
+
+		gl.enableVertexAttribArray(prg.textureCoord);
+		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
+	}
+
+	generateCircleShape() {
 		this.generateVertex();
 		//generate the top sector
 		let sectorIndicesTop = this.generateSector(0, 0, 1, 2, 3);
@@ -77,6 +87,32 @@ class Stair {
 		this.indices.push(2);
 		//sew the outer part with the top and bottom arcs
 		this.sewing(sectorIndicesTop[1], sectorIndicesBottom[1]);
+
+		this.bindBuffers();
+	}
+
+	generateTrapezeShape() {
+		this.generateVertex();
+		//Top
+		this.indices.push(0, 1, 2);
+		this.indices.push(2, 3, 0);
+		//Bottom
+		this.indices.push(4, 5, 6);
+		this.indices.push(6, 7, 4);
+		//Left
+		this.indices.push(0, 3, 7);
+		this.indices.push(0, 4, 7);
+		//Front
+		this.indices.push(0, 1, 4);
+		this.indices.push(1, 4, 5);
+		//Right
+		this.indices.push(1, 5, 6);
+		this.indices.push(1, 2, 6);
+		//Rear
+		this.indices.push(2, 6, 7);
+		this.indices.push(3, 6, 7);
+
+		this.bindBuffers();
 	}
 
 	sewing(array1, array2) {
@@ -186,6 +222,6 @@ class Stair {
 
 		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-		gl.drawElements(this.drawMethod, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(this.drawMethod[this.method], this.indices.length, gl.UNSIGNED_SHORT, 0);
 	}
 }

@@ -28,6 +28,8 @@ let height_value;
 let sampling;
 let sampling_value;
 
+let method_value = 1; //default method
+
 let generateStairway_input;
 
 let sensibility;
@@ -45,7 +47,7 @@ function loadControls() {
 	updateValuesAndLabelsGeneration(true);
 	updateValuesAndLabelsControles();
 	generateStairway();
-    changeDrawMethod();
+	changeGenerationMethod();
 	setFOV();
 }
 
@@ -127,19 +129,22 @@ function generateStairway() {
 	xzPos = 0;
 	yPos = 0;
 	generateStairway_input.style.display = "none";
-	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value);
+	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value, method_value);
 }
 
-function changeDrawMethod() {
-    let drawMethodChildren = document.getElementById("drawMethod").children;
-    let method = [gl.TRIANGLE_STRIP, gl.LINE_LOOP, gl.TRIANGLES];
-    for(let i = 0; i < Math.min(drawMethodChildren.length, method.length); i++)
-    {
-        let li = drawMethodChildren[i];
-        let label = li.children[0];
-        let input = label.children[0];
-        input.addEventListener("change", function() {stairway.setDrawMethod(method[i])});
-    }
+function changeGenerationMethod() {
+	let generationMethod = document.getElementById("generationMethod").children;
+	for (let i = 0; i < generationMethod.length; i++) {
+		let li = generationMethod[i];
+		let label = li.children[0];
+		let input = label.children[0];
+		input.addEventListener("change", function() {
+			method_value = i;
+        	generateStairway_input.style.display = "block";
+		});
+        if(i == stairway.staircase[0].method)
+            input.checked = true;
+	}
 }
 
 function capture() {

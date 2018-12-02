@@ -1,5 +1,5 @@
 class Stairway {
-	constructor(nbStairs, radius1, widthStair, nbStairsPerRound, height, sampling) {
+	constructor(nbStairs, radius1, widthStair, nbStairsPerRound, height, sampling, method) {
 		this.nbStairs = nbStairs;
 		this.radius1 = radius1;
 		this.widthStair = widthStair
@@ -7,6 +7,7 @@ class Stairway {
 		this.nbStairsPerRound = nbStairsPerRound;
 		this.height = height;
 		this.sampling = sampling;
+        this.method = method;
 
 		this.angle = 2 * Math.PI / nbStairsPerRound;
 		this.centerOfStairY = (this.radius2 + this.radius1) / 2;
@@ -44,7 +45,7 @@ class Stairway {
 			top = Math.floor(this.nbStairs / 2) + 1 + artificialOffset;
 		}
 		for (let i = bottom; i < top; i++) { // create and arrange stairs
-			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling);
+			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling, this.method);
 			stair.rotateBy(i * this.angle);
 			stair.translateBy(-i * this.height);
 			this.staircase.push(stair);
@@ -168,12 +169,6 @@ class Stairway {
 
 			topStairIndex--;
 			count++;
-		}
-	}
-
-	setDrawMethod(method) {
-		for (let i = 0; i < this.staircase.length; i++) {
-			this.staircase[i].drawMethod = method;
 		}
 	}
 }
