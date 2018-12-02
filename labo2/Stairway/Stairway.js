@@ -13,7 +13,7 @@ class Stairway {
 
 		this.texture = null;
 
-		this.textureBASE64 = "data:image/png;base64," + "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAACFSURBVDhPY3wro/KfgQIANkAomRnKJQ28m/sXyYDim1BhIkGvOqYB77RUoLL4gdC1O3ADmKBicAAyDB9GBxgGgAHIO9gwFoDdACAAeQcZ4wI4DQABXM5GBngNIAbgNQAUyiCMD+A0ABRVyBgXwG4AMI6xYiyA4oRExaRMBoAbAOWTARgYAOATUzn0CE+YAAAAAElFTkSuQmCC";
+		this.textureBASE64 = textureStair;
 		this.loadTexture();
 
 		yPos = this.centerOfStairY;
@@ -57,8 +57,8 @@ class Stairway {
 		image.onload = function() {
 			gl.bindTexture(gl.TEXTURE_2D, texture);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 			gl.activeTexture(gl.TEXTURE0);
@@ -138,6 +138,9 @@ class Stairway {
 	}
 
 	draw(frame) {
+		gl.enable(gl.DEPTH_TEST);
+		gl.depthFunc(gl.LESS);
+
 		let theta = xzPos + Math.PI;
 		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
 

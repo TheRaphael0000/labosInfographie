@@ -6,7 +6,7 @@ let cnv; //canvas
 
 //Refresh
 let interval;
-const FRAMERATE = 60.0 / 1000.0; // images/milliseconds
+const FRAMERATE = 120.0 / 1000.0; // images/milliseconds
 const PERIOD = 1 / FRAMERATE;
 
 let frame = 0; //framecount

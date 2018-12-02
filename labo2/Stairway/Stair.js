@@ -33,10 +33,10 @@ class Stair {
 		this.generate();
 
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.DYNAMIC_DRAW);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.DYNAMIC_DRAW);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
 
 		gl.enableVertexAttribArray(prg.textureCoord);
 		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
@@ -136,7 +136,7 @@ class Stair {
 				let outerX = this.radius2 * Math.cos(i);
 				let outerY = this.radius2 * Math.sin(i);
 				this.vertices.push(outerX, outerY, z);
-				this.texCoords.push(0.5, 0.5);
+				this.texCoords.push(1, 1 / this.theta * i);
 			}
 			let afterSection = this.vertices.length / 3;
 			for (let i = beforeSection; i < afterSection; i++) {
@@ -160,7 +160,7 @@ class Stair {
 				let innerX = this.radius1 * Math.cos(i);
 				let innerY = this.radius1 * Math.sin(i);
 				this.vertices.push(innerX, innerY, z);
-				this.texCoords.push(0.5, 0.5);
+				this.texCoords.push(0, 1 / this.theta * i);
 			}
 			let afterSection = this.vertices.length / 3;
 			for (let i = beforeSection; i < afterSection; i++) {
