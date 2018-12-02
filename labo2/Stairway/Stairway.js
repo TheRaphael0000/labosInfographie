@@ -1,5 +1,5 @@
 class Stairway {
-	constructor(nbStairs, radius1, widthStair, nbStairsPerRound, height, sampling, method) {
+	constructor(nbStairs, radius1, widthStair, nbStairsPerRound, height, sampling, method, texture) {
 		this.nbStairs = nbStairs;
 		this.radius1 = radius1;
 		this.widthStair = widthStair
@@ -14,7 +14,7 @@ class Stairway {
 
 		this.texture = null;
 
-		this.textureBASE64 = textureStair;
+		this.textureBASE64 = texture;
 		this.loadTexture();
 
 		yPos = this.centerOfStairY;

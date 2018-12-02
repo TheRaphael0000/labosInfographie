@@ -29,6 +29,9 @@ let sampling;
 let sampling_value;
 
 let method_value = 1; //default method
+let texture_value = textureWood; //default texture
+let modcoefx = 1;
+let modcoefy = 1;
 
 let generateStairway_input;
 
@@ -48,7 +51,9 @@ function loadControls() {
 	updateValuesAndLabelsControles();
 	generateStairway();
 	changeGenerationMethod();
+	changeGenerationTexture();
 	setFOV();
+	topright();
 }
 
 function ui() {
@@ -88,7 +93,7 @@ function ui() {
 function setFOV() {
 	fov_value = fov.value;
 	document.getElementById("fov-label").innerHTML = fov_value + "°";
-	mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / cnv.height, 0.01, 1000);
+	mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / modcoefx / cnv.height / modcoefy, 0.01, 1000);
 }
 
 function updateValuesAndLabelsGeneration(showbutton = false) {
@@ -129,7 +134,7 @@ function generateStairway() {
 	xzPos = 0;
 	yPos = 0;
 	generateStairway_input.style.display = "none";
-	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value, method_value);
+	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value, method_value, texture_value);
 }
 
 function changeGenerationMethod() {
@@ -140,11 +145,34 @@ function changeGenerationMethod() {
 		let input = label.children[0];
 		input.addEventListener("change", function() {
 			method_value = i;
-        	generateStairway_input.style.display = "block";
+			generateStairway_input.style.display = "block";
 		});
-        if(i == stairway.staircase[0].method)
-            input.checked = true;
 	}
+}
+
+function changeGenerationTexture() {
+	let texture = document.getElementById("texture").children;
+	for (let i = 0; i < texture.length; i++) {
+		let li = texture[i];
+		let label = li.children[0];
+		let input = label.children[0];
+		input.addEventListener("change", function() {
+			let textures = [textureWood, textureStone, texturePsy];
+			texture_value = textures[i];
+			generateStairway_input.style.display = "block";
+		});
+	}
+}
+
+function topright() {
+	let cover = document.getElementById("topright");
+	let player = document.getElementById("player");
+	cover.addEventListener("mouseenter", function(e) {
+		player.style.opacity = 1;
+	});
+	cover.addEventListener("mouseleave", function(e) {
+		player.style.opacity = 0;
+	});
 }
 
 function capture() {

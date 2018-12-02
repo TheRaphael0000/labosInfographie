@@ -1,10 +1,6 @@
-.nocursor {
-    cursor:none;
-}
-
 #title img {
-    position: absolute;
-    width:80px;
-    padding-left: 780px;
-    top:32px;
+	position: absolute;
+	width: 80px;
+	padding-left: 780px;
+	top: 32px;
 }

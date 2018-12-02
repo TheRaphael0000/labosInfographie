@@ -48,5 +48,9 @@ canvas {
 }
 
 .marked::before {
-    content: "❗ ";
+	content: "❗ ";
+}
+
+.nocursor {
+	cursor: none;
 }

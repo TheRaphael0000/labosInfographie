@@ -12,15 +12,22 @@
 	<script src="../common/MathPlus.js"></script>
 	<script src="Stairway/Stairway.js"></script>
 	<script src="Stairway/Stair.js"></script>
-	<script src="Stairway/texture.js"></script>
+	<script src="resources/textureWood.js"></script>
+	<script src="resources/textureStone.js"></script>
+	<script src="resources/texturePsy.js"></script>
 	<script src="labo.js"></script>
 	<script src="controls.js"></script>
 	<script src="startup.js"></script>
 </head>
 
 <body>
-	<div>
+	<div id='title'>
 		<h1>Stairway to Heaven</h1>
+		<table id='topright' style='background-image:url(https://upload.wikimedia.org/wikipedia/commons/4/4b/Stairway_to_Heaven_by_Led_Zeppelin_US_promotional_single.png)'>
+			<tr>
+				<td><iframe id='player' src="https://www.youtube.com/embed/D9ioyEvdggk?loop=1&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&fs=0" frameborder="0" allow="autoplay" allowfullscreen></iframe></td>
+			</tr>
+		</table>
 	</div>
 	<h2>Laboratoire n°2 : Texturing WebGL</h2>
 	<h3>Informations</h3>
@@ -51,19 +58,25 @@
 	<h3>Utilisation</h3>
 	<h4>Génération de l'escalier</h4>
 	<ul>
-		<li><input id='nbStairs-input' type='range' min='10' max='100' value='50'> Nombre de marches : <span id='nbStairs-label'></span></li>
+		<li><input id='nbStairs-input' type='range' min='10' max='200' value='50'> Nombre de marches : <span id='nbStairs-label'></span></li>
 		<li><input id='widthStair-input' type='range' min='20' max='2000' value='100'> Largeur des marches : <span id='widthStair-label'></span></li>
 		<li><input id='radius1-input' type='range' min='0' max='2000' value='100'> Rayon de l'espace central: <span id='radius1-label'></span></li>
-		<li><input id='nbStairsPerRound-input' type='range' min='10' max='30' value='20'> Nombre de marche par tours : <span id='nbStairsPerRound-label'></span></li>
+		<li><input id='nbStairsPerRound-input' type='range' min='10' max='50' value='20'> Nombre de marche par tours : <span id='nbStairsPerRound-label'></span></li>
 		<li><input id='height-input' type='range' min='10' max='50' value='20'> Hauteur d'une marche : <span id='height-label'></span></li>
 		<li><input id='sampling-input' type='range' min='10' max='200' value='30'> Échantillonage d'une marche : <span id='sampling-label'></span></li>
-        <li>Methode de génération</li>
-        <ul id='generationMethod'>
+		<li>Methode de génération</li>
+		<ul id='generationMethod'>
 			<li><label><input type='radio' name='generationMethod'> : Secteurs de cercles</label></li>
-			<li><label><input type='radio' name='generationMethod'> : Trapèzes</label></li>
+			<li><label><input type='radio' name='generationMethod' checked> : Trapèzes</label></li>
+		</ul>
+		<li>Texture</li>
+		<ul id='texture'>
+			<li><label><input type='radio' name='texture' checked> : Bois</label></li>
+			<li><label><input type='radio' name='texture'> : Pierre</label></li>
+			<li><label><input type='radio' name='texture'> : Psychédélique</label></li>
 		</ul>
 	</ul>
-    <input class='center' id='generateStairway-input' type='button' value='Générer'>
+	<input class='center' id='generateStairway-input' type='button' value='Générer'>
 	<h4>Contrôles</h4>
 	<ul>
 		<li>Clique sur le canevas pour contrôler l'animation</li>
@@ -71,7 +84,7 @@
 			<li>Souris pour controler la camera</li>
 			<ul>
 				<li>Sensibilité : <input id='sensibility-input' type='range' min='20' max='200' value='100'><span id='sensibility-label'></span></li>
-				<li>Champ de vue (FOV) : <input id='fov-input' type='range' min='30' max='90' value='60'><span id='fov-label'></span></li>
+				<li>Champ de vue (FOV) : <input id='fov-input' type='range' min='30' max='90' value='80'><span id='fov-label'></span></li>
 			</ul>
 			<li>W/A/S/D pour contrôler la position</li>
 			<ul>
@@ -79,7 +92,7 @@
 				<li>S : Pour descendre l'escalier</li>
 				<li>A : Pour se déplacer vers l'extérieur de l'escalier</li>
 				<li>D : Pour se déplacer vers l'intérieur de l'escalier</li>
-				<li>Vitesse : <input id='xzSpeed-input' type='range' min='-200' max='200' value='100'><span id='xzSpeed-label'></span><i>, une vitesse négative inverse les contrôles W et S</i></li>
+				<li>Vitesse : <input id='xzSpeed-input' type='range' min='-200' max='200' value='20'><span id='xzSpeed-label'></span><i>, une vitesse négative inverse les contrôles W et S</i></li>
 			</ul>
 		</ul>
 	</ul>
@@ -91,7 +104,7 @@
 	</div>
 	<h3>Souces</h3>
 	<p>
-		Toutes les sources sont datées du 28 novembre 2018.
+		Toutes les sources sont datées du 4 décembre 2018.
 	</p>
 	<h4>Technique</h4>
 	<ul>
@@ -101,6 +114,11 @@
 	<h4>Artistique</h4>
 	<ul>
 		<li>Image base 64 (pour ne pas avoir d'ajax) : <br><a class='linkitself' href='https://stackoverflow.com/a/21227124/9263555'></a></li>
+        <li>Texture Bois : <br><a class='linkitself' href='https://img.glyphs.co/img?src=aHR0cHM6Ly9zMy5tZWRpYWxvb3QuY29tL3Jlc291cmNlcy9GcmVlLVNlYW1sZXNzLVdvb2QtVGV4dHVyZXMtUHJldmlldy0xLmpwZw&q=90&enlarge=true&h=1036&w=1600'></a></li>
+		<li>Texture pierre : <br><a class='linkitself' href='https://previews.123rf.com/images/smuay/smuay1508/smuay150800149/43869823-close-up-old-and-dirty-rock-or-stone-texture-nature-background.jpg'></a></li>
+		<li>Texture psychédélique : <br><a class='linkitself' href='https://wi-images.condecdn.net/image/87qqAPxABY2/crop/1440/landscape/f/iStock-664274658.jpg'></a></li>
+		<li>Couverture single Stairway to Heaven Led Zepplin : <br><a class='linkitself' href='https://upload.wikimedia.org/wikipedia/commons/4/4b/Stairway_to_Heaven_by_Led_Zeppelin_US_promotional_single.png'></a></li>
+		<li>Youtube Stairway to Heaven Led Zepplin : <br><a class='linkitself' href='https://youtu.be/D9ioyEvdggk'></a></li>
 	</ul>
 </body>
 
