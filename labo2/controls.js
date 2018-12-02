@@ -45,6 +45,7 @@ function loadControls() {
 	updateValuesAndLabelsGeneration(true);
 	updateValuesAndLabelsControles();
 	generateStairway();
+    changeDrawMethod();
 	setFOV();
 }
 
@@ -131,10 +132,13 @@ function generateStairway() {
 
 function changeDrawMethod() {
     let drawMethodChildren = document.getElementById("drawMethod").children;
-    for(let i = 0; i < drawMethodChildren.length; i++)
+    let method = [gl.TRIANGLE_STRIP, gl.LINE_LOOP, gl.TRIANGLES];
+    for(let i = 0; i < Math.min(drawMethodChildren.length, method.length); i++)
     {
-        let child = drawMethodChildren[i];
-        console.log(child);
+        let li = drawMethodChildren[i];
+        let label = li.children[0];
+        let input = label.children[0];
+        input.addEventListener("change", function() {stairway.setDrawMethod(method[i])});
     }
 }
 
