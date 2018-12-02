@@ -6,7 +6,7 @@ let cnv; //canvas
 
 //Refresh
 let interval;
-const FRAMERATE = 120.0 / 1000.0; // images/milliseconds
+const FRAMERATE = 60.0 / 1000.0; // images/milliseconds
 const PERIOD = 1 / FRAMERATE;
 
 let frame = 0; //framecount
@@ -16,11 +16,11 @@ let mvMatrix;
 let pMatrix;
 
 const vertexShader = `
-	attribute vec4 aVertexPosition;
-	attribute vec2 aTextureCoord;
+	attribute highp vec4 aVertexPosition;
+	attribute highp vec2 aTextureCoord;
 
-	uniform mat4 uMVMatrix;
-	uniform mat4 upMatrix;
+	uniform highp mat4 uMVMatrix;
+	uniform highp mat4 upMatrix;
 
 	varying highp vec2 vTextureCoord;
 
@@ -34,7 +34,7 @@ const vertexShader = `
 const fragmentShader = `
 	varying highp vec2 vTextureCoord;
 
-	uniform sampler2D uSampler;
+	uniform highp sampler2D uSampler;
 
 	void main(void)
 	{

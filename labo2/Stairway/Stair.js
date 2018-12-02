@@ -30,6 +30,8 @@ class Stair {
 		this.texCoords = [];
 		this.texCoordsBuff = gl.createBuffer();
 
+        this.drawMethod = gl.TRIANGLE_STRIP;
+
 		this.generate();
 
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
@@ -179,14 +181,11 @@ class Stair {
 	}
 
 	draw(frame) {
-		this.verticesBuff = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuff);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.DYNAMIC_DRAW);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.DYNAMIC_DRAW); //dynamic_draw improve performance
 
 		gl.vertexAttribPointer(prg.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-		// gl.drawElements(gl.LINE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
-		// gl.drawElements(gl.POINTS, this.indices.length, gl.UNSIGNED_SHORT, 0);
-		gl.drawElements(gl.TRIANGLE_STRIP, this.indices.length, gl.UNSIGNED_SHORT, 0);
+		gl.drawElements(this.drawMethod, this.indices.length, gl.UNSIGNED_SHORT, 0);
 	}
 }

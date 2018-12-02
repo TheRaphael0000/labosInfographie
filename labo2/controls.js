@@ -85,7 +85,7 @@ function ui() {
 function setFOV() {
 	fov_value = fov.value;
 	document.getElementById("fov-label").innerHTML = fov_value + "°";
-	mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / cnv.height, 0.01, 10000);
+	mat4.perspective(pMatrix, fov_value * Math.PI / 180, cnv.width / cnv.height, 0.01, 1000);
 }
 
 function updateValuesAndLabelsGeneration(showbutton = false) {
@@ -127,6 +127,15 @@ function generateStairway() {
 	yPos = 0;
 	generateStairway_input.style.display = "none";
 	stairway = new Stairway(nbStairsy_value, radius1_value, widthStair_value, nbStairsPerRound_value, height_value, sampling_value);
+}
+
+function changeDrawMethod() {
+    let drawMethodChildren = document.getElementById("drawMethod").children;
+    for(let i = 0; i < drawMethodChildren.length; i++)
+    {
+        let child = drawMethodChildren[i];
+        console.log(child);
+    }
 }
 
 function capture() {
