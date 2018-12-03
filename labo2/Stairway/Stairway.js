@@ -92,7 +92,7 @@ class Stairway {
 			positionOnTheStairY = this.centerOfStairY;
 			xzPos += xzSpeed_value * speedConstant;
 		}
-		theta = xzPos + Math.PI; //theta == positon on the spiral
+		theta = xzPos; //theta == positon on the spiral
 
 		mvMatrix = mat4.create();
 		let x = positionOnTheStairY * Math.cos(theta);

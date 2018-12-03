@@ -50,20 +50,32 @@
 
 	<h3>Description</h3>
 	<p>
-		Le but du labo est de générer un escalier en colimaçon infini, du moins, à l'aspect.
-		Il est possible de se déplacer sur cette escalier via l'utilisation du clavier ainsi que la sourie, il est également possible
-		de modifier les paramètres de cet escalier. Cepandant, par défaut, la caméra vas automatiquement se déplacer vers l'avant.
+		Le but de ce laboratoire a été de générer un escalier en colimaçon infini.
+		C'est une montée perpetuelle dans le sens que de les marches trop éloigné disparaissent et son utilisé pour combler les marches dans notre direction.
+	</p>
+	<p>
+		L'escalier est configurable sur plusieurs paramètres, pour en avoir un à son goût.
+		Sur le clique du canevas, il est possible de contrôler la camera (position et oriantation) pour se déplacer dans l'escalier.
+	</p>
+	<p>
+		Il existe deux méthode de génération des marches. L'une avec des secteurs de cercle rogné par un second secteur de cercle plus petit (beaucoup de sommets, pour donner une forme arrondi, configurable) et avec des trapèzes (8 sommets). Initialement
+		uniquement
+		les secteur de cercle avait été prévu, mais la façon que nous avons utilisé pour générer ces secteurs (coordonnées sphérique) ne nous a pas permis d'avoir un rendu correct des textures. Nous avons donc ajouté la possibilité d'utiliser les trapèzes
+		pour la génération.
+	</p>
+	<p>
+		Pour le parcours de l'escalier nous utilisons la formule paramétrique de l'Helix, cela nous permet d'avoir un déplacement fluide sans devoir intégrer un système de physique.
 	</p>
 
 	<h3>Utilisation</h3>
 	<h4>Génération de l'escalier</h4>
 	<ul>
-		<li><input id='nbStairs-input' type='range' min='10' max='200' value='50'> Nombre de marches : <span id='nbStairs-label'></span></li>
+		<li><input id='nbStairs-input' type='range' min='50' max='200' value='75'> Nombre de marches : <span id='nbStairs-label'></span></li>
 		<li><input id='widthStair-input' type='range' min='20' max='2000' value='100'> Largeur des marches : <span id='widthStair-label'></span></li>
 		<li><input id='radius1-input' type='range' min='0' max='2000' value='100'> Rayon de l'espace central: <span id='radius1-label'></span></li>
 		<li><input id='nbStairsPerRound-input' type='range' min='10' max='50' value='20'> Nombre de marche par tours : <span id='nbStairsPerRound-label'></span></li>
 		<li><input id='height-input' type='range' min='10' max='50' value='20'> Hauteur d'une marche : <span id='height-label'></span></li>
-		<li><input id='sampling-input' type='range' min='10' max='200' value='30'> Échantillonage d'une marche : <span id='sampling-label'></span></li>
+		<li><input id='sampling-input' type='range' min='10' max='200' value='30'> Échantillonage d'une marche (uniquement pour la génération par secteurs de cercles) : <span id='sampling-label'></span></li>
 		<li>Methode de génération</li>
 		<ul id='generationMethod'>
 			<li><label><input type='radio' name='generationMethod'> : Secteurs de cercles</label></li>
@@ -114,7 +126,7 @@
 	<h4>Artistique</h4>
 	<ul>
 		<li>Image base 64 (pour ne pas avoir d'ajax) : <br><a class='linkitself' href='https://stackoverflow.com/a/21227124/9263555'></a></li>
-        <li>Texture Bois : <br><a class='linkitself' href='https://img.glyphs.co/img?src=aHR0cHM6Ly9zMy5tZWRpYWxvb3QuY29tL3Jlc291cmNlcy9GcmVlLVNlYW1sZXNzLVdvb2QtVGV4dHVyZXMtUHJldmlldy0xLmpwZw&q=90&enlarge=true&h=1036&w=1600'></a></li>
+		<li>Texture Bois : <br><a class='linkitself' href='https://img.glyphs.co/img?src=aHR0cHM6Ly9zMy5tZWRpYWxvb3QuY29tL3Jlc291cmNlcy9GcmVlLVNlYW1sZXNzLVdvb2QtVGV4dHVyZXMtUHJldmlldy0xLmpwZw&q=90&enlarge=true&h=1036&w=1600'></a></li>
 		<li>Texture pierre : <br><a class='linkitself' href='https://previews.123rf.com/images/smuay/smuay1508/smuay150800149/43869823-close-up-old-and-dirty-rock-or-stone-texture-nature-background.jpg'></a></li>
 		<li>Texture psychédélique : <br><a class='linkitself' href='https://wi-images.condecdn.net/image/87qqAPxABY2/crop/1440/landscape/f/iStock-664274658.jpg'></a></li>
 		<li>Couverture single Stairway to Heaven Led Zepplin : <br><a class='linkitself' href='https://upload.wikimedia.org/wikipedia/commons/4/4b/Stairway_to_Heaven_by_Led_Zeppelin_US_promotional_single.png'></a></li>
