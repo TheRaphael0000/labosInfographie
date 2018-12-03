@@ -108,11 +108,11 @@ class Stairway {
 		let delta = z - this.oldZpos;
 		if (Math.abs(delta) > this.height) {
 			if (delta >= 0) {
-				this.oldZpos = z - delta + this.height;
+				this.oldZpos += this.height;
 				this.shiftUp();
 			}
 			else {
-				this.oldZpos = z + delta - this.height;
+				this.oldZpos -= this.height;
 				this.shiftDown();
 			}
 		}
