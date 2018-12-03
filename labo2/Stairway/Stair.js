@@ -24,6 +24,7 @@ class Stair {
 
 		this.currentZ = 0;
 
+		//Bufffers
 		this.vertices = [];
 		this.verticesBuff = gl.createBuffer();
 		this.indices = [];
@@ -31,7 +32,7 @@ class Stair {
 		this.texCoords = [];
 		this.texCoordsBuff = gl.createBuffer();
 
-
+		//In function of the method generate and set the right method
 		this.drawMethod = [gl.TRIANGLE_STRIP, gl.TRIANGLES];
 		switch (this.method) {
 			case 0:
@@ -54,17 +55,6 @@ class Stair {
 			vec3.add(v, v, [0, 0, x])
 		});
 		this.currentZ -= x;
-	}
-
-	bindBuffers() {
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
-
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
-
-		gl.enableVertexAttribArray(prg.textureCoord);
-		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
 	}
 
 	generateCircleShape() {
@@ -115,15 +105,6 @@ class Stair {
 		this.bindBuffers();
 	}
 
-	sewing(array1, array2) {
-		for (let i = 0; i < Math.min(array1.length, array2.length); i++) {
-			let i1 = array1[i];
-			let i2 = array2[i];
-			this.indices.push(i1);
-			this.indices.push(i2);
-		}
-	}
-
 	generateVertex() {
 		let x1 = this.radius1 * Math.cos(this.theta);
 		let x2 = this.radius2 * Math.cos(this.theta);
@@ -151,6 +132,26 @@ class Stair {
 		this.texCoords.push(1.0, 1.0);
 		this.vertices.push(x1, y1, this.height); //7
 		this.texCoords.push(0.0, 1.0);
+	}
+
+	bindBuffers() {
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuff);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuff);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
+
+		gl.enableVertexAttribArray(prg.textureCoord);
+		gl.vertexAttribPointer(prg.textureCoord, 2, gl.FLOAT, false, 0, 0);
+	}
+
+	sewing(array1, array2) {
+		for (let i = 0; i < Math.min(array1.length, array2.length); i++) {
+			let i1 = array1[i];
+			let i2 = array2[i];
+			this.indices.push(i1);
+			this.indices.push(i2);
+		}
 	}
 
 	generateSector(z, a, b, c, d) {
@@ -211,12 +212,8 @@ class Stair {
 		return [innerSector, outerSector];
 	}
 
-	update(frame) {
-		let rotation = mat4.create();
-		mat4.fromRotation(rotation, Math.PI * 0.005, [1, 3, 5]);
-	}
-
 	draw(frame) {
+		//update of the vertices buffer for the stair position
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuff);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.DYNAMIC_DRAW); //dynamic_draw improve performance
 

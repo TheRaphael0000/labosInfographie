@@ -15,6 +15,7 @@ let frame = 0; //framecount
 let mvMatrix;
 let pMatrix;
 
+//shaders code directly in a string to make the load easier
 const vertexShader = `
 	attribute highp vec4 aVertexPosition;
 	attribute highp vec2 aTextureCoord;

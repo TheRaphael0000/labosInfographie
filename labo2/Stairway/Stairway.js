@@ -62,7 +62,7 @@ class Stairway {
 			gl.activeTexture(gl.TEXTURE0);
 			gl.uniform1i(prg.uSampler, 0);
 		};
-		image.src = this.textureBASE64;
+		image.src = this.textureBASE64; //give the base64 representation of the image
 	}
 
 	update(frame) {

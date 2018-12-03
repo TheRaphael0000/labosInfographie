@@ -1,8 +1,11 @@
+// Messiest file, used to bind the ui interactions with the program
+//current position
 let xCamera = 0;
 let yCamera = 0;
 let xzPos = 0;
 let yPos = 0;
 
+//movements
 let keyW;
 let keyS;
 let keyA;
@@ -10,6 +13,7 @@ let keyD;
 
 let playerControl = false;
 
+//sliders generation
 let nbStairs;
 let nbStairs_value;
 
@@ -35,6 +39,7 @@ let modcoefy = 1;
 
 let generateStairway_input;
 
+//controls camera
 let sensibility;
 let sensibility_value;
 
@@ -55,6 +60,8 @@ function loadControls() {
 	setFOV();
 	topright();
 }
+
+//every function below are juste binding of ui and parameters
 
 function ui() {
 	//Generation
@@ -215,7 +222,7 @@ function capture() {
 	});
 
 	function updateCameraRotation(e) {
-		xCamera += (e.movementX / 1000) * (sensibility_value);
+		xCamera += (e.movementX / 1000) * (sensibility_value); // divide by 1000 to have a good sensibility with a sensibility_value coef at 1
 		yCamera += (e.movementY / 1000) * (sensibility_value);
 	}
 
