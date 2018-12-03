@@ -27,7 +27,7 @@ class Stairway {
 	}
 
 	/**
-	 * generate stairs and place them so that the camera is placed in a position where he can see a maximum of stairs
+	 * generate stairs and place them so that the camera is placed in a position where it can see a maximum of stairs
 	 */
 	generate() {
 		let bottom;
@@ -40,7 +40,7 @@ class Stairway {
 			bottom = -Math.floor(this.nbStairs / 2);
 			top = Math.floor(this.nbStairs / 2) + 1;
 		}
-		for (let i = bottom; i < top; i++) { // create and arrange stairs
+		for (let i = bottom; i < top; i++) { // create and arrange stairs position and rotation
 			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling, this.method);
 			stair.rotateBy(i * this.angle);
 			stair.translateBy(-i * this.height);
@@ -103,6 +103,8 @@ class Stairway {
 		mat4.rotate(mvMatrix, mvMatrix, -theta - 2 * Math.PI / 8 - xCamera, [0, 0, 1]);
 		mat4.translate(mvMatrix, mvMatrix, [x, y, z]);
 
+		// if the camera moved in the z axis by the height of one stair,
+		// the staircase will adjust his stair position accordingly to make it seem like it is infinite
 		let delta = z - this.oldZpos;
 		if (Math.abs(delta) > this.height) {
 			if (delta >= 0) {
@@ -116,6 +118,10 @@ class Stairway {
 		}
 	}
 
+	/**
+	 * take the step at the bottom to move it it at the top
+	 * then adjust the bottomIndex pointer accordingly
+	 */
 	shiftUp() {
 		this.staircase[this.bottomIndex].rotateBy(this.nbStairs * this.angle);
 		this.staircase[this.bottomIndex].translateBy(-this.nbStairs * this.height);
@@ -125,6 +131,10 @@ class Stairway {
 			this.bottomIndex = 0;
 	}
 
+	/**
+	 * take the step at the top to move it it at the bottom
+	 * then adjust the bottomIndex pointer accordingly
+	 */
 	shiftDown() {
 		let topIndex = this.bottomIndex - 1;
 		if (topIndex < 0)
@@ -137,16 +147,21 @@ class Stairway {
 			this.bottomIndex = this.nbStairs - 1;
 	}
 
+	/**
+	 * here all stair bellow the camera must be rendered from bottom to camero position
+	 * and all stair above camera must be rendered from top to camera position
+	 */
 	draw(frame) {
 		gl.enable(gl.DEPTH_TEST);
 		gl.depthFunc(gl.LESS);
 
 		let theta = xzPos + Math.PI;
-		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI);
+		let z = theta * this.nbStairsPerRound * this.height / (2 * Math.PI); // get current z position of camera
 
 		let bellowStairIndex = this.bottomIndex;
 		let count = 0;
-		while (this.staircase[bellowStairIndex].currentZ < z && count < this.nbStairs) //render the stair bellow first
+		// render the stair bellow first
+		while (this.staircase[bellowStairIndex].currentZ < z && count < this.nbStairs) // compare camera z position to stair z position
 		{
 			let stair = this.staircase[bellowStairIndex];
 			stair.draw(frame);
