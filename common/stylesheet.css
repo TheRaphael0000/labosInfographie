@@ -45,6 +45,7 @@ canvas {
 
 .linkitself::after {
 	content: attr(href);
+	word-wrap:break-word;
 }
 
 .marked::before {
