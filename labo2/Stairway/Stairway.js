@@ -33,16 +33,12 @@ class Stairway {
 		let bottom;
 		let top;
 
-		let artificialOffset = Math.floor(this.nbStairs / 6); // due to perspective, placing the camera right in the middle of stairs will often show
-		// a truncated stair at the top and a full one at the bottom
-		// to optimise this, an offset to the position of the stairs is introduced
-
 		if (this.nbStairs % 2 == 0) {
-			bottom = -this.nbStairs / 2 + artificialOffset;
-			top = this.nbStairs / 2 + artificialOffset;
+			bottom = -this.nbStairs / 2;
+			top = this.nbStairs / 2;
 		} else {
-			bottom = -Math.floor(this.nbStairs / 2) + artificialOffset;
-			top = Math.floor(this.nbStairs / 2) + 1 + artificialOffset;
+			bottom = -Math.floor(this.nbStairs / 2);
+			top = Math.floor(this.nbStairs / 2) + 1;
 		}
 		for (let i = bottom; i < top; i++) { // create and arrange stairs
 			let stair = new Stair(this.radius1, this.radius2, this.angle, this.height, this.sampling, this.method);
@@ -98,7 +94,6 @@ class Stairway {
 		}
 		theta = xzPos + Math.PI; //theta == positon on the spiral
 
-		//todo : move in the shader code and only link the theta when finish
 		mvMatrix = mat4.create();
 		let x = positionOnTheStairY * Math.cos(theta);
 		let y = positionOnTheStairY * Math.sin(theta);
@@ -110,11 +105,14 @@ class Stairway {
 
 		let delta = z - this.oldZpos;
 		if (Math.abs(delta) > this.height) {
-			this.oldZpos = z;
-			if (delta >= 0)
+			if (delta >= 0) {
+				this.oldZpos = z - delta + this.height;
 				this.shiftUp();
-			else
+			}
+			else {
+				this.oldZpos = z + delta - this.height;
 				this.shiftDown();
+			}
 		}
 	}
 
